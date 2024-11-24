@@ -1,0 +1,42 @@
+"use server";
+
+import { getCookie } from "hono/cookie";
+import { createMiddleware } from "hono/factory";
+import { verify } from "hono/jwt";
+
+import { AUTH_COOKIE } from "@/features/auth/constants";
+
+type AdditionalContext = {
+  Variables: {
+    user: { firstName?: string; lastName?: string; email: string };
+  };
+};
+
+export const authMiddleware = createMiddleware<AdditionalContext>(
+  async (c, next) => {
+    const authCookie = getCookie(c, AUTH_COOKIE);
+
+    if (!authCookie) {
+      return c.json({ success: false, message: "Unauthorized", data: {} }, 401);
+    }
+
+    try {
+      const decodedPayload = await verify(authCookie, process.env.JWT_SECRET!);
+
+      c.set(
+        "user",
+        decodedPayload as {
+          firstName?: string;
+          lastName?: string;
+          email: string;
+        },
+      );
+
+      await next();
+    } catch (error) {
+      console.log(error);
+
+      return c.json({ success: false, message: "Unauthorized", data: {} }, 401);
+    }
+  },
+);
