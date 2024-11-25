@@ -1,4 +1,4 @@
-// import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import { getCurrent } from "@/features/auth/actions";
 import { ProfileCard } from "@/features/profile/components/profile-card";
@@ -8,9 +8,9 @@ export default async function ProfilePage() {
 
   console.log("PROFILE PAYLOAD: ", jwtPayload);
 
-  // if (!jwtPayload) {
-  //   redirect("/");
-  // }
+  if (jwtPayload === null) {
+    redirect("/");
+  }
 
   return <ProfileCard />;
 }
