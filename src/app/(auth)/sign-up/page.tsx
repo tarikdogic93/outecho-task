@@ -4,9 +4,9 @@ import { getCurrent } from "@/features/auth/actions";
 import { SignUpCard } from "@/features/auth/components/sign-up-card";
 
 export default async function SignUpPage() {
-  const user = await getCurrent();
+  const jwtPayload = await getCurrent();
 
-  if (user) {
+  if (jwtPayload) {
     redirect("/");
   }
 

@@ -13,7 +13,16 @@ import { signInSchema, signUpSchema } from "@/features/auth/schemas";
 
 const app = new Hono()
   .get("/current", authMiddleware, async (c) => {
-    const user = c.get("user");
+    const jwtPayload = c.get("jwtPayload");
+
+    const user = await db.query.users.findFirst({
+      columns: {
+        firstName: true,
+        lastName: true,
+        email: true,
+      },
+      where: eq(users.email, jwtPayload.email),
+    });
 
     return c.json({
       success: true,
@@ -46,8 +55,6 @@ const app = new Hono()
 
     const jwtToken = await sign(
       {
-        firstName: existingUser.firstName,
-        lastName: existingUser.lastName,
         email,
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 1,
       },

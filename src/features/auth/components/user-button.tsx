@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface UserButtonProps {
-  user: { firstName?: string; lastName?: string; email: string };
+  user: { firstName: string | null; lastName: string | null; email: string };
 }
 
 export const UserButton = ({ user }: UserButtonProps) => {

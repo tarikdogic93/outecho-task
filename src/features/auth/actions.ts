@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
 import { AUTH_COOKIE } from "@/features/auth/constants";
 
@@ -10,18 +10,12 @@ export const getCurrent = async () => {
     const authCookie = (await cookies()).get(AUTH_COOKIE);
 
     if (authCookie) {
-      try {
-        const decodedPayload = jwt.verify(
-          authCookie.value,
-          process.env.JWT_SECRET!,
-        );
+      const decodedPayload = await jwtVerify(
+        authCookie.value,
+        new TextEncoder().encode(process.env.JWT_SECRET!),
+      );
 
-        return decodedPayload;
-      } catch (error) {
-        console.log(error);
-
-        return null;
-      }
+      return decodedPayload;
     }
 
     return null;

@@ -8,7 +8,7 @@ import { AUTH_COOKIE } from "@/features/auth/constants";
 
 type AdditionalContext = {
   Variables: {
-    user: { firstName?: string; lastName?: string; email: string };
+    jwtPayload: { email: string };
   };
 };
 
@@ -23,14 +23,7 @@ export const authMiddleware = createMiddleware<AdditionalContext>(
     try {
       const decodedPayload = await verify(authCookie, process.env.JWT_SECRET!);
 
-      c.set(
-        "user",
-        decodedPayload as {
-          firstName?: string;
-          lastName?: string;
-          email: string;
-        },
-      );
+      c.set("jwtPayload", decodedPayload);
 
       await next();
     } catch (error) {

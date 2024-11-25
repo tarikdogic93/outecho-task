@@ -4,9 +4,9 @@ import { getCurrent } from "@/features/auth/actions";
 import { SignInCard } from "@/features/auth/components/sign-in-card";
 
 export default async function SignInPage() {
-  const user = await getCurrent();
+  const jwtPayload = await getCurrent();
 
-  if (user) {
+  if (jwtPayload) {
     redirect("/");
   }
 

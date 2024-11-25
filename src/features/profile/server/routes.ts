@@ -1,6 +1,5 @@
 import { Hono } from "hono";
-import { sign, verify } from "hono/jwt";
-import { setCookie, deleteCookie, getCookie } from "hono/cookie";
+import { deleteCookie } from "hono/cookie";
 import { eq } from "drizzle-orm";
 import bcrypt, { compare } from "bcryptjs";
 import { zValidator } from "@hono/zod-validator";
@@ -17,10 +16,10 @@ const app = new Hono()
     authMiddleware,
     zValidator("json", profileSchema),
     async (c) => {
-      const user = c.get("user");
+      const jwtPayload = c.get("jwtPayload");
 
       const existingUser = await db.query.users.findFirst({
-        where: eq(users.email, user.email),
+        where: eq(users.email, jwtPayload.email),
       });
 
       if (!existingUser) {
@@ -63,41 +62,6 @@ const app = new Hono()
         lastName: updatedLastName,
       });
 
-      const authCookie = getCookie(c, AUTH_COOKIE);
-
-      if (!authCookie) {
-        return c.json(
-          { success: false, message: "Unauthorized", data: {} },
-          401,
-        );
-      }
-
-      const decodedPayload = await verify(authCookie, process.env.JWT_SECRET!);
-
-      if (!decodedPayload.exp) {
-        return c.json({ success: false, message: "Invalid JWT token" }, 400);
-      }
-
-      const originalExp = decodedPayload.exp;
-
-      const updatedPayload = {
-        ...decodedPayload,
-        firstName: updatedFirstName,
-        lastName: updatedLastName,
-      };
-
-      deleteCookie(c, AUTH_COOKIE);
-
-      const jwtToken = await sign(updatedPayload, process.env.JWT_SECRET!);
-
-      setCookie(c, AUTH_COOKIE, jwtToken, {
-        path: "/",
-        httpOnly: true,
-        sameSite: "strict",
-        secure: true,
-        maxAge: originalExp - Math.floor(Date.now() / 1000),
-      });
-
       return c.json({
         success: true,
         message: "You have successfully updated your profile",
@@ -110,10 +74,10 @@ const app = new Hono()
     },
   )
   .post("/delete", authMiddleware, async (c) => {
-    const user = c.get("user");
+    const jwtPayload = c.get("jwtPayload");
 
     const existingUser = await db.query.users.findFirst({
-      where: eq(users.email, user.email),
+      where: eq(users.email, jwtPayload.email),
     });
 
     if (!existingUser) {

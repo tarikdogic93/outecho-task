@@ -1,14 +1,14 @@
-// import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
-// import { getCurrent } from "@/features/auth/actions";
+import { getCurrent } from "@/features/auth/actions";
 import { ProfileCard } from "@/features/profile/components/profile-card";
 
 export default async function ProfilePage() {
-  // const user = await getCurrent();
+  const jwtPayload = await getCurrent();
 
-  // if (!user) {
-  //   redirect("/");
-  // }
+  if (!jwtPayload) {
+    redirect("/");
+  }
 
   return <ProfileCard />;
 }
