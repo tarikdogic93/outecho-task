@@ -9,6 +9,7 @@ export default async function ProfilePage() {
   console.log("PROFILE PAYLOAD: ", jwtPayload);
 
   if (jwtPayload === null) {
+    console.log("PROFILE PAYLOAD inside condition: ", jwtPayload);
     redirect("/");
   }
 
