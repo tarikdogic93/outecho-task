@@ -12,7 +12,7 @@ type AdditionalContext = {
   };
 };
 
-export const authMiddleware = createMiddleware<AdditionalContext>(
+export const apiAuthMiddleware = createMiddleware<AdditionalContext>(
   async (c, next) => {
     const authCookie = getCookie(c, AUTH_COOKIE);
 

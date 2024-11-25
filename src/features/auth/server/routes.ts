@@ -8,11 +8,11 @@ import { zValidator } from "@hono/zod-validator";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { AUTH_COOKIE } from "@/constants";
-import { authMiddleware } from "@/lib/auth-middleware";
+import { apiAuthMiddleware } from "@/lib/api-auth-middleware";
 import { signInSchema, signUpSchema } from "@/features/auth/schemas";
 
 const app = new Hono()
-  .get("/current", authMiddleware, async (c) => {
+  .get("/current", apiAuthMiddleware, async (c) => {
     const jwtPayload = c.get("jwtPayload");
 
     const user = await db.query.users.findFirst({
@@ -111,7 +111,7 @@ const app = new Hono()
       data: { firstName: updatedFirstName, lastName: updatedLastName, email },
     });
   })
-  .post("/signout", authMiddleware, async (c) => {
+  .post("/signout", apiAuthMiddleware, async (c) => {
     deleteCookie(c, AUTH_COOKIE);
 
     return c.json({

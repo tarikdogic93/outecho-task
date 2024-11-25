@@ -7,13 +7,13 @@ import { zValidator } from "@hono/zod-validator";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { AUTH_COOKIE } from "@/constants";
-import { authMiddleware } from "@/lib/auth-middleware";
+import { apiAuthMiddleware } from "@/lib/api-auth-middleware";
 import { profileSchema } from "@/features/profile/schemas";
 
 const app = new Hono()
   .post(
     "/update",
-    authMiddleware,
+    apiAuthMiddleware,
     zValidator("json", profileSchema),
     async (c) => {
       const jwtPayload = c.get("jwtPayload");
@@ -73,7 +73,7 @@ const app = new Hono()
       });
     },
   )
-  .post("/delete", authMiddleware, async (c) => {
+  .post("/delete", apiAuthMiddleware, async (c) => {
     const jwtPayload = c.get("jwtPayload");
 
     const existingUser = await db.query.users.findFirst({
