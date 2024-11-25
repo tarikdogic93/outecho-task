@@ -4,7 +4,7 @@ import { getCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 import { verify } from "hono/jwt";
 
-import { AUTH_COOKIE } from "@/features/auth/constants";
+import { AUTH_COOKIE } from "@/constants";
 
 type AdditionalContext = {
   Variables: {

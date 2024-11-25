@@ -7,8 +7,8 @@ import { zValidator } from "@hono/zod-validator";
 
 import { db } from "@/db";
 import { users } from "@/db/schema";
+import { AUTH_COOKIE } from "@/constants";
 import { authMiddleware } from "@/lib/auth-middleware";
-import { AUTH_COOKIE } from "@/features/auth/constants";
 import { signInSchema, signUpSchema } from "@/features/auth/schemas";
 
 const app = new Hono()
