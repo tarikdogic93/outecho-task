@@ -6,10 +6,7 @@ import { ProfileCard } from "@/features/profile/components/profile-card";
 export default async function ProfilePage() {
   const jwtPayload = await getCurrent();
 
-  console.log("PROFILE PAYLOAD: ", jwtPayload);
-
-  if (jwtPayload === null) {
-    console.log("PROFILE PAYLOAD inside condition: ", jwtPayload);
+  if (!jwtPayload) {
     redirect("/");
   }
 
