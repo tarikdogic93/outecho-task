@@ -10,12 +10,12 @@ export const getCurrent = async () => {
     const authCookie = (await cookies()).get(AUTH_COOKIE);
 
     if (authCookie) {
-      const decodedPayload = await jwtVerify(
+      const { payload } = await jwtVerify(
         authCookie.value,
         new TextEncoder().encode(process.env.JWT_SECRET!),
       );
 
-      return decodedPayload;
+      return payload;
     }
 
     return null;

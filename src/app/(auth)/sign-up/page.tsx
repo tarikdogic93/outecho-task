@@ -6,6 +6,8 @@ import { SignUpCard } from "@/features/auth/components/sign-up-card";
 export default async function SignUpPage() {
   const jwtPayload = await getCurrent();
 
+  console.log("SIGNUP PAYLOAD: ", jwtPayload);
+
   if (jwtPayload) {
     redirect("/");
   }
