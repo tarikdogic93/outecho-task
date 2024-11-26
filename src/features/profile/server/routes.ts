@@ -48,19 +48,25 @@ const app = new Hono()
         if (newPassword) {
           const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-          await db.update(users).set({
-            password: hashedNewPassword,
-          });
+          await db
+            .update(users)
+            .set({
+              password: hashedNewPassword,
+            })
+            .where(eq(users.email, existingUser.email));
         }
       }
 
       const updatedFirstName = firstName ? firstName : null;
       const updatedLastName = lastName ? lastName : null;
 
-      await db.update(users).set({
-        firstName: updatedFirstName,
-        lastName: updatedLastName,
-      });
+      await db
+        .update(users)
+        .set({
+          firstName: updatedFirstName,
+          lastName: updatedLastName,
+        })
+        .where(eq(users.email, existingUser.email));
 
       return c.json({
         success: true,
