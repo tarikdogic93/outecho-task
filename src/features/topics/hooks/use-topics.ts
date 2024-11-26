@@ -20,6 +20,7 @@ export function useTopics(limit: number) {
     },
     initialPageParam: 1,
     staleTime: 0,
+    refetchOnWindowFocus: false,
     getNextPageParam: (lastPage, _, lastPageParam) => {
       if (lastPage && lastPage.pagination.totalPages <= lastPageParam) {
         return undefined;
