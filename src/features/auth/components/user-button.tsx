@@ -49,13 +49,15 @@ export function UserButton({ user }: UserButtonProps) {
               {avatarFallback}
             </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex w-full flex-col items-center justify-center">
             {firstName && lastName && (
-              <p className="text-sm font-medium">
+              <p className="max-w-full truncate text-sm font-medium">
                 {`${firstName} ${lastName}`}
               </p>
             )}
-            <p className="text-xs text-muted-foreground">{email}</p>
+            <p className="max-w-full truncate text-xs text-muted-foreground">
+              {email}
+            </p>
           </div>
         </div>
         <Separator className="mb-1" />

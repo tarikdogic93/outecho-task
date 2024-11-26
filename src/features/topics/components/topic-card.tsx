@@ -17,13 +17,14 @@ interface TopicCardProps {
       lastName: string | null;
       email: string;
     };
+    likesCount: number;
   };
 }
 
 export function TopicCard({ topic }: TopicCardProps) {
   const router = useRouter();
 
-  const { id, title, createdAt, updatedAt, user } = topic;
+  const { id, title, createdAt, updatedAt, user, likesCount } = topic;
   const { firstName, lastName, email } = user;
 
   const createdAtDate = new Date(createdAt);
@@ -35,12 +36,12 @@ export function TopicCard({ topic }: TopicCardProps) {
 
   return (
     <Card
-      className="h-full w-full cursor-pointer hover:border-primary/40 hover:bg-primary/20 md:w-[600px]"
+      className="h-full w-full max-w-3xl cursor-pointer hover:border-primary/40 hover:bg-primary/20"
       onClick={() => router.push(`/topics/${id}`)}
     >
       <CardContent className="p-6">
         <div className="flex flex-col">
-          <h3 className="text-xl font-semibold">{title}</h3>
+          <h3 className="truncate text-xl font-semibold">{title}</h3>
           <div className="flex items-center">
             <p className="text-sm text-primary">
               {firstName && lastName ? `${firstName} ${lastName}` : email}
@@ -50,8 +51,10 @@ export function TopicCard({ topic }: TopicCardProps) {
               {timeLabel} {formatDistanceToNowStrict(dateToUse)} ago
             </p>
             <Dot />
-            <p className="overflow-ellipsis text-sm text-muted-foreground">
-              100000 comments
+            <p className="text-sm text-muted-foreground">100000 comments</p>
+            <Dot />
+            <p className="text-sm text-muted-foreground">
+              {likesCount} {likesCount === 1 ? "like" : "likes"}
             </p>
           </div>
         </div>

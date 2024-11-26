@@ -7,10 +7,10 @@ import { TopicCard } from "@/features/topics/components/topic-card";
 import { Button } from "@/components/ui/button";
 
 export function TopicsList() {
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isRefetching } =
     useTopics(20);
 
-  if (!data) {
+  if (!data || isRefetching) {
     return <Loader2 className="size-10 animate-spin text-primary" />;
   }
 
@@ -18,7 +18,7 @@ export function TopicsList() {
     .filter((page) => page?.data)
     .flatMap((page) => page?.data || []);
 
-  if (!topics || topics.length === 0) {
+  if (topics.length === 0) {
     return <p className="font-medium">No topics found</p>;
   }
 

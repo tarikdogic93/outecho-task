@@ -1,10 +1,10 @@
 import { Hono } from "hono";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 
 import { db } from "@/db";
-import { users, topics } from "@/db/schemas";
+import { users, topics, likes } from "@/db/schemas";
 import { apiAuthMiddleware } from "@/lib/api-auth-middleware";
 import { topicSchema } from "@/features/topics/schemas";
 
@@ -62,12 +62,25 @@ const app = new Hono()
               email: true,
             },
           },
+          likes: true,
         },
+      });
+
+      const topicsWithLikesCount = userTopics.map((topic) => {
+        const likesCount = topic.likes.length;
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { likes, ...topicWithoutLikes } = topic;
+
+        return {
+          ...topicWithoutLikes,
+          likesCount,
+        };
       });
 
       return c.json({
         message: "",
-        data: userTopics,
+        data: topicsWithLikesCount,
         pagination: {
           page: page,
           totalPages: Math.ceil(userTopicsTotalCount / limit) as number,
@@ -98,6 +111,7 @@ const app = new Hono()
             email: true,
           },
         },
+        likes: true,
       },
     });
 
@@ -105,9 +119,22 @@ const app = new Hono()
       return c.json({ message: "This topic does not exist", data: {} }, 404);
     }
 
+    const existingLike = existingTopic.likes.find(
+      (like) => like.userId === existingUser.id,
+    );
+
+    const likesCount = existingTopic.likes.length;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { likes, ...topicWithoutLikes } = existingTopic;
+
     return c.json({
       message: "",
-      data: existingTopic,
+      data: {
+        ...topicWithoutLikes,
+        likesCount: likesCount,
+        like: !!existingLike,
+      },
     });
   })
   .post(
@@ -206,6 +233,55 @@ const app = new Hono()
       });
     },
   )
+  .post("/:topicId/like", apiAuthMiddleware, async (c) => {
+    const jwtPayload = c.get("jwtPayload");
+
+    const existingUser = await db.query.users.findFirst({
+      where: eq(users.email, jwtPayload.email),
+    });
+
+    if (!existingUser) {
+      return c.json({ message: "This account does not exist", data: {} }, 404);
+    }
+
+    const topicId = c.req.param("topicId");
+
+    const existingTopic = await db.query.topics.findFirst({
+      where: eq(topics.id, topicId),
+    });
+
+    if (!existingTopic) {
+      return c.json({ message: "This topic does not exist", data: {} }, 404);
+    }
+
+    const existingLike = await db.query.likes.findFirst({
+      where: and(
+        eq(likes.userId, existingUser.id),
+        eq(likes.topicId, existingTopic.id),
+      ),
+    });
+
+    if (!existingLike) {
+      await db.insert(likes).values({
+        userId: existingUser.id,
+        topicId: existingTopic.id,
+      });
+    } else {
+      await db
+        .delete(likes)
+        .where(
+          and(
+            eq(likes.userId, existingUser.id),
+            eq(likes.topicId, existingTopic.id),
+          ),
+        );
+    }
+
+    return c.json({
+      message: "",
+      data: {},
+    });
+  })
   .post("/:topicId/delete", apiAuthMiddleware, async (c) => {
     const jwtPayload = c.get("jwtPayload");
 

@@ -32,13 +32,39 @@ export const topics = pgTable("topics", {
     .$onUpdate(() => new Date()),
 });
 
+export const likes = pgTable("likes", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  topicId: text("topic_id")
+    .notNull()
+    .references(() => topics.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const usersRelations = relations(users, ({ many }) => ({
   topics: many(topics),
+  likes: many(likes),
 }));
 
-export const topicsRelations = relations(topics, ({ one }) => ({
+export const topicsRelations = relations(topics, ({ one, many }) => ({
   user: one(users, {
     fields: [topics.userId],
     references: [users.id],
+  }),
+  likes: many(likes),
+}));
+
+export const likesRelations = relations(likes, ({ one }) => ({
+  user: one(users, {
+    fields: [likes.userId],
+    references: [users.id],
+  }),
+  topic: one(topics, {
+    fields: [likes.topicId],
+    references: [topics.id],
   }),
 }));
