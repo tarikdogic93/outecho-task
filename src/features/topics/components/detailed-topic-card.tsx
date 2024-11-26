@@ -37,8 +37,8 @@ export function DetailedTopicCard({ topicId }: DetailedTopicCardProps) {
     createdAt,
     updatedAt,
     user,
-    like,
     likesCount,
+    like,
   } = topic;
   const { firstName, lastName, email } = user;
 

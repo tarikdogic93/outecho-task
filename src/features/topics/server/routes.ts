@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { and, eq } from "drizzle-orm";
+import { and, count, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 
@@ -101,40 +101,35 @@ const app = new Hono()
 
     const topicId = c.req.param("topicId");
 
-    const existingTopic = await db.query.topics.findFirst({
-      where: eq(topics.id, topicId),
-      with: {
+    const existingTopic = await db
+      .select({
+        id: topics.id,
+        title: topics.title,
+        description: topics.description,
+        createdAt: topics.createdAt,
+        updatedAt: topics.updatedAt,
         user: {
-          columns: {
-            firstName: true,
-            lastName: true,
-            email: true,
-          },
+          firstName: users.firstName,
+          lastName: users.lastName,
+          email: users.email,
         },
-        likes: true,
-      },
-    });
+        likesCount: count(likes.id),
+        like: sql<boolean>`CASE WHEN ${likes.userId} IS NOT NULL THEN true ELSE false END`,
+      })
+      .from(topics)
+      .innerJoin(users, eq(topics.userId, users.id))
+      .leftJoin(likes, eq(topics.id, likes.topicId))
+      .where(eq(topics.id, topicId))
+      .groupBy(topics.id, users.id, likes.userId)
+      .limit(1);
 
     if (!existingTopic) {
       return c.json({ message: "This topic does not exist", data: {} }, 404);
     }
 
-    const existingLike = existingTopic.likes.find(
-      (like) => like.userId === existingUser.id,
-    );
-
-    const likesCount = existingTopic.likes.length;
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { likes, ...topicWithoutLikes } = existingTopic;
-
     return c.json({
       message: "",
-      data: {
-        ...topicWithoutLikes,
-        likesCount: likesCount,
-        like: !!existingLike,
-      },
+      data: existingTopic[0],
     });
   })
   .post(
