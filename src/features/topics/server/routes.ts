@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 
 import { db } from "@/db";
-import { users, topics, likes } from "@/db/schemas";
+import { users, topics, likes, comments } from "@/db/schemas";
 import { apiAuthMiddleware } from "@/lib/api-auth-middleware";
 import { topicSchema } from "@/features/topics/schemas";
 
@@ -58,10 +58,12 @@ const app = new Hono()
             lastName: users.lastName,
             email: users.email,
           },
-          likesCount: count(likes.id),
+          commentsCount: count(comments.id),
+          likesCount: sql`COUNT(DISTINCT ${likes.userId})`,
         })
         .from(topics)
         .innerJoin(users, eq(topics.userId, users.id))
+        .leftJoin(comments, eq(topics.id, comments.topicId))
         .leftJoin(likes, eq(topics.id, likes.topicId))
         .where(eq(topics.userId, existingUser.id))
         .groupBy(topics.id, users.id)
@@ -103,14 +105,16 @@ const app = new Hono()
           lastName: users.lastName,
           email: users.email,
         },
-        likesCount: count(likes.id),
-        like: sql<boolean>`CASE WHEN ${likes.userId} IS NOT NULL THEN true ELSE false END`,
+        commentsCount: count(comments.id),
+        likesCount: sql`COUNT(DISTINCT ${likes.userId})`,
+        like: sql<boolean>`MAX(CASE WHEN ${likes.userId} = ${existingUser.id} THEN 1 ELSE 0 END) = 1`,
       })
       .from(topics)
       .innerJoin(users, eq(topics.userId, users.id))
+      .leftJoin(comments, eq(topics.id, comments.topicId))
       .leftJoin(likes, eq(topics.id, likes.topicId))
       .where(eq(topics.id, topicId))
-      .groupBy(topics.id, users.id, likes.userId)
+      .groupBy(topics.id, users.id)
       .limit(1);
 
     if (!existingTopic) {

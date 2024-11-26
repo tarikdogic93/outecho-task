@@ -32,22 +32,22 @@ export function CommentCard({ comment }: CommentCardProps) {
   const timeLabel = updatedAtDate > createdAtDate ? "Updated" : "Created";
 
   return (
-    <Card className="h-full w-full max-w-3xl cursor-pointer border-primary/40 bg-primary/20">
+    <Card className="h-full w-full max-w-3xl border-none outline-dashed outline-2 outline-input">
       <CardContent className="p-6">
-        <div className="flex flex-col">
-          <p className="sm truncate font-semibold">{content}</p>
+        <div className="flex flex-col gap-y-2">
+          <p className="break-words text-sm text-muted-foreground">{content}</p>
           <div className="flex items-center">
-            <p className="text-sm text-primary">
+            <p className="text-glow text-sm font-bold tracking-wide">
               {firstName && lastName ? `${firstName} ${lastName}` : email}
             </p>
             <Dot />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm">
               {timeLabel} {formatDistanceToNowStrict(dateToUse)} ago
             </p>
             <Dot />
-            <p className="text-sm text-muted-foreground">100000 replies</p>
+            <p className="text-sm">100000 replies</p>
             <Dot />
-            <p className="text-sm text-muted-foreground">100000 likes</p>
+            <p className="text-sm">100000 likes</p>
           </div>
         </div>
       </CardContent>
