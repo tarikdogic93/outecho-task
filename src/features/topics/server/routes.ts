@@ -53,7 +53,7 @@ const app = new Hono()
         where: eq(topics.userId, existingUser.id),
         limit,
         offset,
-        orderBy: (topics, { asc }) => asc(topics.createdAt),
+        orderBy: (topics, { desc }) => desc(topics.createdAt),
         with: {
           user: {
             columns: {
