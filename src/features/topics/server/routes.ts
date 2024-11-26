@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { and, count, eq, sql } from "drizzle-orm";
+import { and, count, desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 
@@ -37,53 +37,44 @@ const app = new Hono()
       const limit = Number(c.req.query("limit") || 5);
       const offset = (page - 1) * limit;
 
-      const userTopicsTotalCount = (
-        await db.query.topics.findMany({
-          where: eq(topics.userId, existingUser.id),
+      const totalCountResult = await db
+        .select({
+          totalCount: count(topics.id),
         })
-      ).length;
+        .from(topics)
+        .where(eq(topics.userId, existingUser.id))
+        .limit(1);
 
-      const userTopics = await db.query.topics.findMany({
-        columns: {
-          id: true,
-          title: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-        where: eq(topics.userId, existingUser.id),
-        limit,
-        offset,
-        orderBy: (topics, { desc }) => desc(topics.createdAt),
-        with: {
+      const totalCount = totalCountResult[0].totalCount;
+
+      const userTopics = await db
+        .select({
+          id: topics.id,
+          title: topics.title,
+          createdAt: topics.createdAt,
+          updatedAt: topics.updatedAt,
           user: {
-            columns: {
-              firstName: true,
-              lastName: true,
-              email: true,
-            },
+            firstName: users.firstName,
+            lastName: users.lastName,
+            email: users.email,
           },
-          likes: true,
-        },
-      });
-
-      const topicsWithLikesCount = userTopics.map((topic) => {
-        const likesCount = topic.likes.length;
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { likes, ...topicWithoutLikes } = topic;
-
-        return {
-          ...topicWithoutLikes,
-          likesCount,
-        };
-      });
+          likesCount: count(likes.id),
+        })
+        .from(topics)
+        .innerJoin(users, eq(topics.userId, users.id))
+        .leftJoin(likes, eq(topics.id, likes.topicId))
+        .where(eq(topics.userId, existingUser.id))
+        .groupBy(topics.id, users.id)
+        .limit(limit)
+        .offset(offset)
+        .orderBy(desc(topics.createdAt));
 
       return c.json({
         message: "",
-        data: topicsWithLikesCount,
+        data: userTopics,
         pagination: {
           page: page,
-          totalPages: Math.ceil(userTopicsTotalCount / limit) as number,
+          totalPages: Math.ceil(totalCount / limit) as number,
         },
       });
     },
