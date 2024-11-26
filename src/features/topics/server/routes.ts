@@ -28,7 +28,7 @@ const app = new Hono()
 
       if (!existingUser) {
         return c.json(
-          { success: false, message: "This account does not exist", data: {} },
+          { message: "This account does not exist", data: {} },
           404,
         );
       }
@@ -66,7 +66,6 @@ const app = new Hono()
       });
 
       return c.json({
-        success: true,
         message: "",
         data: userTopics,
         pagination: {
@@ -84,10 +83,7 @@ const app = new Hono()
     });
 
     if (!existingUser) {
-      return c.json(
-        { success: false, message: "This account does not exist", data: {} },
-        404,
-      );
+      return c.json({ message: "This account does not exist", data: {} }, 404);
     }
 
     const topicId = c.req.param("topicId");
@@ -106,14 +102,10 @@ const app = new Hono()
     });
 
     if (!existingTopic) {
-      return c.json(
-        { success: false, message: "This topic does not exist", data: {} },
-        404,
-      );
+      return c.json({ message: "This topic does not exist", data: {} }, 404);
     }
 
     return c.json({
-      success: true,
       message: "",
       data: existingTopic,
     });
@@ -131,7 +123,7 @@ const app = new Hono()
 
       if (!existingUser) {
         return c.json(
-          { success: false, message: "This account does not exist", data: {} },
+          { message: "This account does not exist", data: {} },
           404,
         );
       }
@@ -147,7 +139,6 @@ const app = new Hono()
       });
 
       return c.json({
-        success: true,
         message: "You have successfully created your topic",
         data: {
           title,
@@ -169,7 +160,7 @@ const app = new Hono()
 
       if (!existingUser) {
         return c.json(
-          { success: false, message: "This account does not exist", data: {} },
+          { message: "This account does not exist", data: {} },
           404,
         );
       }
@@ -181,9 +172,16 @@ const app = new Hono()
       });
 
       if (!existingTopic) {
+        return c.json({ message: "This topic does not exist", data: {} }, 404);
+      }
+
+      if (existingTopic.userId !== existingUser.id) {
         return c.json(
-          { success: false, message: "This topic does not exist", data: {} },
-          404,
+          {
+            message: "You are not allowed to update this topic",
+            data: {},
+          },
+          403,
         );
       }
 
@@ -200,7 +198,6 @@ const app = new Hono()
         .where(eq(topics.id, existingTopic.id));
 
       return c.json({
-        success: true,
         message: "You have successfully updated your topic",
         data: {
           title,
@@ -217,10 +214,7 @@ const app = new Hono()
     });
 
     if (!existingUser) {
-      return c.json(
-        { success: false, message: "This account does not exist", data: {} },
-        404,
-      );
+      return c.json({ message: "This account does not exist", data: {} }, 404);
     }
 
     const topicId = c.req.param("topicId");
@@ -230,16 +224,22 @@ const app = new Hono()
     });
 
     if (!existingTopic) {
+      return c.json({ message: "This topic does not exist", data: {} }, 404);
+    }
+
+    if (existingTopic.userId !== existingUser.id) {
       return c.json(
-        { success: false, message: "This topic does not exist", data: {} },
-        404,
+        {
+          message: "You are not allowed to delete this topic",
+          data: {},
+        },
+        403,
       );
     }
 
     await db.delete(topics).where(eq(topics.id, existingTopic.id));
 
     return c.json({
-      success: true,
       message: "You have successfully deleted your topic",
       data: {},
     });

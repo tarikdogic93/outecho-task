@@ -25,7 +25,6 @@ const app = new Hono()
     });
 
     return c.json({
-      success: true,
       message: "",
       data: user,
     });
@@ -39,7 +38,10 @@ const app = new Hono()
 
     if (!existingUser) {
       return c.json(
-        { success: false, message: "Invalid credentials", data: {} },
+        {
+          message: "Account does not exist",
+          data: {},
+        },
         401,
       );
     }
@@ -47,10 +49,7 @@ const app = new Hono()
     const isPasswordConfirmed = await compare(password, existingUser.password);
 
     if (!isPasswordConfirmed) {
-      return c.json(
-        { success: false, message: "Invalid credentials", data: {} },
-        401,
-      );
+      return c.json({ message: "Invalid password", data: {} }, 401);
     }
 
     const jwtToken = await sign(
@@ -70,13 +69,8 @@ const app = new Hono()
     });
 
     return c.json({
-      success: true,
-      message: "You have successfully signed in",
-      data: {
-        firstName: existingUser.firstName,
-        lastName: existingUser.lastName,
-        email,
-      },
+      message: "",
+      data: {},
     });
   })
   .post("/signup", zValidator("json", signUpSchema), async (c) => {
@@ -87,10 +81,7 @@ const app = new Hono()
     });
 
     if (existingUser) {
-      return c.json(
-        { success: false, message: "This account already exists", data: {} },
-        400,
-      );
+      return c.json({ message: "This account already exists", data: {} }, 400);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -106,17 +97,15 @@ const app = new Hono()
     });
 
     return c.json({
-      success: true,
       message: "You have successfully signed up",
-      data: { firstName: updatedFirstName, lastName: updatedLastName, email },
+      data: {},
     });
   })
   .post("/signout", apiAuthMiddleware, async (c) => {
     deleteCookie(c, AUTH_COOKIE);
 
     return c.json({
-      success: true,
-      message: "You have successfully signed out",
+      message: "",
       data: {},
     });
   });

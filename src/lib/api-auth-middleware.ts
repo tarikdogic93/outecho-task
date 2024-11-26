@@ -17,7 +17,7 @@ export const apiAuthMiddleware = createMiddleware<AdditionalContext>(
     const authCookie = getCookie(c, AUTH_COOKIE);
 
     if (!authCookie) {
-      return c.json({ success: false, message: "Unauthorized", data: {} }, 401);
+      return c.json({ message: "Unauthorized", data: {} }, 401);
     }
 
     try {
@@ -29,7 +29,7 @@ export const apiAuthMiddleware = createMiddleware<AdditionalContext>(
     } catch (error) {
       console.log(error);
 
-      return c.json({ success: false, message: "Unauthorized", data: {} }, 401);
+      return c.json({ message: "Unauthorized", data: {} }, 401);
     }
   },
 );

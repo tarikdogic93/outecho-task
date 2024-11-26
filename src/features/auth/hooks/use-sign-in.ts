@@ -27,10 +27,8 @@ export function useSignIn() {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["current"] });
-
-      toast.success(data.message);
 
       router.push("/");
     },

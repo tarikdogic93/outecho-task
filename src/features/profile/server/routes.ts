@@ -24,7 +24,7 @@ const app = new Hono()
 
       if (!existingUser) {
         return c.json(
-          { success: false, message: "This account does not exist", data: {} },
+          { message: "This account does not exist", data: {} },
           404,
         );
       }
@@ -39,10 +39,7 @@ const app = new Hono()
         );
 
         if (!isOldPasswordConfirmed) {
-          return c.json(
-            { success: false, message: "Invalid credentials", data: {} },
-            401,
-          );
+          return c.json({ message: "Invalid password", data: {} }, 401);
         }
 
         if (newPassword) {
@@ -69,13 +66,8 @@ const app = new Hono()
         .where(eq(users.email, existingUser.email));
 
       return c.json({
-        success: true,
         message: "You have successfully updated your profile",
-        data: {
-          firstName: updatedFirstName,
-          lastName: updatedLastName,
-          email: existingUser.email,
-        },
+        data: {},
       });
     },
   )
@@ -87,10 +79,7 @@ const app = new Hono()
     });
 
     if (!existingUser) {
-      return c.json(
-        { success: false, message: "This account does not exist", data: {} },
-        404,
-      );
+      return c.json({ message: "This account does not exist", data: {} }, 404);
     }
 
     await db.delete(users).where(eq(users.email, existingUser.email));
@@ -98,8 +87,7 @@ const app = new Hono()
     deleteCookie(c, AUTH_COOKIE);
 
     return c.json({
-      success: true,
-      message: "You have successfully deleted your account",
+      message: "",
       data: {},
     });
   });
