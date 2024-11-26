@@ -31,10 +31,10 @@ interface QueryProviderProps {
   children: React.ReactNode;
 }
 
-export const QueryProvider = ({ children }: QueryProviderProps) => {
+export function QueryProvider({ children }: QueryProviderProps) {
   const queryClient = getQueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
-};
+}

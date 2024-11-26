@@ -26,7 +26,7 @@ const defaultValues: defaultValuesType = {
   password: "",
 };
 
-export const SignInCard = () => {
+export function SignInCard() {
   const { mutate, isPending } = useSignIn();
 
   const form = useForm<z.infer<typeof signInSchema>>({
@@ -83,7 +83,7 @@ export const SignInCard = () => {
               )}
             />
             <Button className="w-full" size="lg" disabled={isPending}>
-              Sign In
+              {isPending ? "Signing in..." : "Sign in"}
             </Button>
           </form>
         </Form>
@@ -101,4 +101,4 @@ export const SignInCard = () => {
       </CardContent>
     </Card>
   );
-};
+}

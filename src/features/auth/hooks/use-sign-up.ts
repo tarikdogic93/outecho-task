@@ -8,7 +8,7 @@ import { client } from "@/lib/rpc";
 type ResponseType = InferResponseType<(typeof client.api.auth.signup)["$post"]>;
 type RequestType = InferRequestType<(typeof client.api.auth.signup)["$post"]>;
 
-export const useSignUp = () => {
+export function useSignUp() {
   const router = useRouter();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
@@ -34,4 +34,4 @@ export const useSignUp = () => {
   });
 
   return mutation;
-};
+}

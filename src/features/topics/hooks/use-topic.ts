@@ -2,11 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
 
-export function useCurrent() {
+export function useTopic(topicId: string) {
   const query = useQuery({
-    queryKey: ["current"],
+    queryKey: [topicId],
     queryFn: async () => {
-      const response = await client.api.auth.current["$get"]();
+      const response = await client.api.topics[":topicId"]["$get"]({
+        param: { topicId },
+      });
 
       if (!response.ok) {
         return null;

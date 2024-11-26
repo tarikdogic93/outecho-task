@@ -9,7 +9,7 @@ type ResponseType = InferResponseType<
   (typeof client.api.profile.delete)["$post"]
 >;
 
-export const useAccountDelete = () => {
+export function useAccountDelete() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -38,4 +38,4 @@ export const useAccountDelete = () => {
   });
 
   return mutation;
-};
+}

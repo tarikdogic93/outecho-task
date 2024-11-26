@@ -9,7 +9,7 @@ type ResponseType = InferResponseType<
   (typeof client.api.auth.signout)["$post"]
 >;
 
-export const useSignOut = () => {
+export function useSignOut() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -38,4 +38,4 @@ export const useSignOut = () => {
   });
 
   return mutation;
-};
+}

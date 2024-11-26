@@ -8,7 +8,7 @@ import { client } from "@/lib/rpc";
 type ResponseType = InferResponseType<(typeof client.api.auth.signin)["$post"]>;
 type RequestType = InferRequestType<(typeof client.api.auth.signin)["$post"]>;
 
-export const useSignIn = () => {
+export function useSignIn() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -37,4 +37,4 @@ export const useSignIn = () => {
   });
 
   return mutation;
-};
+}

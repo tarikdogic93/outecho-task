@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useAccountDelete } from "@/features/profile/hooks/use-account-delete";
 
-export const DeleteAccountAlert = () => {
+export function DeleteAccountAlert() {
   const { mutate } = useAccountDelete();
 
   return (
@@ -41,4 +41,4 @@ export const DeleteAccountAlert = () => {
       </AlertDialogContent>
     </AlertDialog>
   );
-};
+}

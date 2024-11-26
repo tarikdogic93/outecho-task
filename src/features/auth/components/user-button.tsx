@@ -17,7 +17,7 @@ interface UserButtonProps {
   user: { firstName: string | null; lastName: string | null; email: string };
 }
 
-export const UserButton = ({ user }: UserButtonProps) => {
+export function UserButton({ user }: UserButtonProps) {
   const router = useRouter();
   const { mutate: signOut } = useSignOut();
 
@@ -77,4 +77,4 @@ export const UserButton = ({ user }: UserButtonProps) => {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+}

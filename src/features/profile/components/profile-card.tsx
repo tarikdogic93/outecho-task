@@ -30,7 +30,7 @@ const defaultValues: defaultValuesType = {
   newPassword: "",
 };
 
-export const ProfileCard = () => {
+export function ProfileCard() {
   const { mutate, isPending } = useProfileUpdate();
   const { data: user } = useCurrent();
 
@@ -135,7 +135,7 @@ export const ProfileCard = () => {
               )}
             />
             <Button className="w-full" size="lg" disabled={isPending}>
-              Update
+              {isPending ? "Updating..." : "Update"}
             </Button>
           </form>
         </Form>
@@ -148,4 +148,4 @@ export const ProfileCard = () => {
       </CardContent>
     </Card>
   );
-};
+}

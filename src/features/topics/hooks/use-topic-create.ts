@@ -5,18 +5,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.profile.update)["$post"]
+  (typeof client.api.topics.create)["$post"]
 >;
-type RequestType = InferRequestType<
-  (typeof client.api.profile.update)["$post"]
->;
+type RequestType = InferRequestType<(typeof client.api.topics.create)["$post"]>;
 
-export function useProfileUpdate() {
+export function useTopicCreate() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
-      const response = await client.api.profile.update["$post"]({ json });
+      const response = await client.api.topics.create["$post"]({ json });
 
       const data = await response.json();
 
@@ -30,7 +28,6 @@ export function useProfileUpdate() {
       toast.error(error.message);
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["current"] });
       queryClient.invalidateQueries({ queryKey: ["topics"] });
 
       toast.success(data.message);

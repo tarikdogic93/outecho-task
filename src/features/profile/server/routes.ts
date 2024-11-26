@@ -5,7 +5,7 @@ import bcrypt, { compare } from "bcryptjs";
 import { zValidator } from "@hono/zod-validator";
 
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { users } from "@/db/schemas";
 import { AUTH_COOKIE } from "@/constants";
 import { apiAuthMiddleware } from "@/lib/api-auth-middleware";
 import { profileSchema } from "@/features/profile/schemas";

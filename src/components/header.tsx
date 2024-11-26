@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { Navigation } from "@/components/navigation";
 
-export const Header = () => {
+export function Header() {
   return (
     <header className="sticky top-0 w-full bg-primary-foreground p-4 shadow-md">
       <div className="mx-auto flex h-10 max-w-screen-2xl items-center justify-between">
@@ -15,4 +15,4 @@ export const Header = () => {
       </div>
     </header>
   );
-};
+}
