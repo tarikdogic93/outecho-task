@@ -1,23 +1,21 @@
-import { InferRequestType, InferResponseType } from "hono";
+import { useRouter } from "next/navigation";
+import { InferResponseType } from "hono";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.topics)[":topicId"]["update"]["$post"]
->;
-type RequestType = InferRequestType<
-  (typeof client.api.topics)[":topicId"]["update"]["$post"]
+  (typeof client.api.topics)[":topicId"]["delete"]["$post"]
 >;
 
-export function useTopicUpdate(topicId: string) {
+export function useDeleteTopic(topicId: string) {
+  const router = useRouter();
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ json }) => {
-      const response = await client.api.topics[":topicId"]["update"]["$post"]({
-        json,
+  const mutation = useMutation<ResponseType, Error>({
+    mutationFn: async () => {
+      const response = await client.api.topics[":topicId"]["delete"]["$post"]({
         param: { topicId },
       });
 
@@ -34,9 +32,10 @@ export function useTopicUpdate(topicId: string) {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["topics"] });
-      queryClient.invalidateQueries({ queryKey: [`${topicId}`] });
 
       toast.success(data.message);
+
+      router.push("/topics");
     },
   });
 

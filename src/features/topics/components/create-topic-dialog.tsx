@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { topicSchema } from "@/features/topics/schemas";
-import { useTopicCreate } from "@/features/topics/hooks/use-topic-create";
+import { useCreateTopic } from "@/features/topics/hooks/use-create-topic";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,7 +35,7 @@ const defaultValues: defaultValuesType = {
 
 export function CreateTopicDialog() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { mutate, isPending } = useTopicCreate();
+  const { mutate, isPending } = useCreateTopic();
 
   const form = useForm<z.infer<typeof topicSchema>>({
     resolver: zodResolver(topicSchema),

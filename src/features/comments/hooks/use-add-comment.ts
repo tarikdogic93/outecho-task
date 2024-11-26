@@ -5,16 +5,21 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.topics.create)["$post"]
+  (typeof client.api.comments)[":topicId"]["add"]["$post"]
 >;
-type RequestType = InferRequestType<(typeof client.api.topics.create)["$post"]>;
+type RequestType = InferRequestType<
+  (typeof client.api.comments)[":topicId"]["add"]["$post"]
+>;
 
-export function useTopicCreate() {
+export function useAddComment(topicId: string) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
-      const response = await client.api.topics.create["$post"]({ json });
+      const response = await client.api.comments[":topicId"]["add"]["$post"]({
+        json,
+        param: { topicId },
+      });
 
       const data = await response.json();
 
@@ -29,6 +34,8 @@ export function useTopicCreate() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["topics"] });
+      queryClient.invalidateQueries({ queryKey: [`${topicId}`] });
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
 
       toast.success(data.message);
     },

@@ -94,7 +94,6 @@ const app = new Hono()
 
     const existingTopic = await db
       .select({
-        id: topics.id,
         title: topics.title,
         description: topics.description,
         createdAt: topics.createdAt,
@@ -153,10 +152,7 @@ const app = new Hono()
 
       return c.json({
         message: "You have successfully created your topic",
-        data: {
-          title,
-          description: updatedDescription,
-        },
+        data: {},
       });
     },
   )
@@ -212,10 +208,7 @@ const app = new Hono()
 
       return c.json({
         message: "You have successfully updated your topic",
-        data: {
-          title,
-          description: updatedDescription,
-        },
+        data: {},
       });
     },
   )

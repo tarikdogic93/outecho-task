@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { topicSchema } from "@/features/topics/schemas";
-import { useTopic } from "@/features/topics/hooks/use-topic";
-import { useUpdateTopic } from "@/features/topics/hooks/use-update-topic";
+import { commentSchema } from "@/features/comments/schemas";
+import { useAddComment } from "@/features/comments/hooks/use-add-comment";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
@@ -27,41 +25,27 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-type defaultValuesType = z.infer<typeof topicSchema>;
+type defaultValuesType = z.infer<typeof commentSchema>;
 
 const defaultValues: defaultValuesType = {
-  title: "",
-  description: "",
+  content: "",
 };
 
-interface UpdateTopicDialogProps {
+interface AddCommentDialogProps {
   topicId: string;
   disabled?: boolean;
 }
 
-export function UpdateTopicDialog({
-  topicId,
-  disabled,
-}: UpdateTopicDialogProps) {
+export function AddCommentDialog({ topicId, disabled }: AddCommentDialogProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { data: topic } = useTopic(topicId);
-  const { mutate, isPending } = useUpdateTopic(topicId);
+  const { mutate, isPending } = useAddComment(topicId);
 
-  const form = useForm<z.infer<typeof topicSchema>>({
-    resolver: zodResolver(topicSchema),
+  const form = useForm<z.infer<typeof commentSchema>>({
+    resolver: zodResolver(commentSchema),
     defaultValues,
   });
 
-  useEffect(() => {
-    if (topic) {
-      form.reset({
-        title: topic.title || defaultValues.title,
-        description: topic.description || defaultValues.description,
-      });
-    }
-  }, [topic, form]);
-
-  function onSubmit(values: z.infer<typeof topicSchema>) {
+  function onSubmit(values: z.infer<typeof commentSchema>) {
     mutate(
       { json: values, param: { topicId } },
       {
@@ -78,49 +62,32 @@ export function UpdateTopicDialog({
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button
+          variant="secondary"
           size="sm"
           disabled={disabled}
           onClick={() => setIsDialogOpen(true)}
         >
-          Update
+          Add comment
         </Button>
       </DialogTrigger>
       <DialogContent className="md:w-[500px]">
         <DialogHeader>
-          <DialogTitle>Update this topic</DialogTitle>
+          <DialogTitle>Share your thoughts</DialogTitle>
           <DialogDescription>
-            Give your topic a title and a brief description
+            Write a comment and let us know your opinion
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      autoComplete="off"
-                      placeholder="Enter title"
-                      disabled={isPending}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
+              name="content"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <Textarea
                       className="max-h-56 min-h-56"
-                      placeholder="Enter description"
+                      placeholder="Enter content"
                       disabled={isPending}
                       {...field}
                     />
@@ -130,7 +97,7 @@ export function UpdateTopicDialog({
               )}
             />
             <Button className="w-full" size="lg" disabled={isPending}>
-              {isPending ? "Updating..." : "Update"}
+              {isPending ? "Submitting..." : "Submit"}
             </Button>
           </form>
         </Form>

@@ -1,4 +1,3 @@
-import { useRouter } from "next/navigation";
 import { InferResponseType } from "hono";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -6,16 +5,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.topics)[":topicId"]["delete"]["$post"]
+  (typeof client.api.topics)[":topicId"]["like"]["$post"]
 >;
 
-export function useTopicDelete(topicId: string) {
-  const router = useRouter();
+export function useLikeTopic(topicId: string) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error>({
     mutationFn: async () => {
-      const response = await client.api.topics[":topicId"]["delete"]["$post"]({
+      const response = await client.api.topics[":topicId"]["like"]["$post"]({
         param: { topicId },
       });
 
@@ -30,12 +28,9 @@ export function useTopicDelete(topicId: string) {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["topics"] });
-
-      toast.success(data.message);
-
-      router.push("/topics");
+      queryClient.invalidateQueries({ queryKey: [`${topicId}`] });
     },
   });
 

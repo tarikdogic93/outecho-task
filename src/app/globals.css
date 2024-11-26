@@ -71,3 +71,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .text-glow {
+    @apply animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent;
+  }
+}

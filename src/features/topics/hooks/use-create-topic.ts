@@ -1,21 +1,20 @@
-import { InferResponseType } from "hono";
+import { InferRequestType, InferResponseType } from "hono";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.topics)[":topicId"]["like"]["$post"]
+  (typeof client.api.topics.create)["$post"]
 >;
+type RequestType = InferRequestType<(typeof client.api.topics.create)["$post"]>;
 
-export function useTopicLike(topicId: string) {
+export function useCreateTopic() {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<ResponseType, Error>({
-    mutationFn: async () => {
-      const response = await client.api.topics[":topicId"]["like"]["$post"]({
-        param: { topicId },
-      });
+  const mutation = useMutation<ResponseType, Error, RequestType>({
+    mutationFn: async ({ json }) => {
+      const response = await client.api.topics.create["$post"]({ json });
 
       const data = await response.json();
 
@@ -28,9 +27,10 @@ export function useTopicLike(topicId: string) {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["topics"] });
-      queryClient.invalidateQueries({ queryKey: [`${topicId}`] });
+
+      toast.success(data.message);
     },
   });
 
