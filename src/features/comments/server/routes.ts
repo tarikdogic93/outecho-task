@@ -95,7 +95,7 @@ const app = new Hono()
     zValidator(
       "json",
       commentSchema.extend({
-        topicId: z.string().min(1, "Topic ID is required"),
+        topicId: z.string(),
       }),
     ),
     async (c) => {
@@ -130,6 +130,153 @@ const app = new Hono()
 
       return c.json({
         message: "You have successfully created your comment",
+        data: {},
+      });
+    },
+  )
+  .post(
+    "/:commentId/update",
+    apiAuthMiddleware,
+    zValidator(
+      "json",
+      commentSchema.extend({
+        topicId: z.string(),
+      }),
+    ),
+    async (c) => {
+      const jwtPayload = c.get("jwtPayload");
+
+      const existingUser = await db.query.users.findFirst({
+        where: eq(users.email, jwtPayload.email),
+      });
+
+      if (!existingUser) {
+        return c.json(
+          { message: "This account does not exist", data: {} },
+          404,
+        );
+      }
+
+      const { topicId, content } = c.req.valid("json");
+
+      const existingTopic = await db.query.topics.findFirst({
+        where: eq(topics.id, topicId),
+      });
+
+      if (!existingTopic) {
+        return c.json({ message: "This topic does not exist", data: {} }, 404);
+      }
+
+      const commentId = c.req.param("commentId");
+
+      const existingComment = await db.query.comments.findFirst({
+        where: eq(comments.id, commentId),
+      });
+
+      if (!existingComment) {
+        return c.json(
+          { message: "This comment does not exist", data: {} },
+          404,
+        );
+      }
+
+      if (existingComment.topicId !== existingTopic.id) {
+        return c.json(
+          { message: "This comment does not belong to this topic", data: {} },
+          404,
+        );
+      }
+
+      if (existingComment.userId !== existingUser.id) {
+        return c.json(
+          {
+            message: "You are not allowed to update this comment",
+            data: {},
+          },
+          403,
+        );
+      }
+
+      await db
+        .update(comments)
+        .set({
+          content,
+        })
+        .where(eq(comments.id, existingComment.id));
+
+      return c.json({
+        message: "You have successfully updated your comment",
+        data: {},
+      });
+    },
+  )
+  .post(
+    "/:commentId/delete",
+    apiAuthMiddleware,
+    zValidator(
+      "json",
+      z.object({
+        topicId: z.string(),
+      }),
+    ),
+    async (c) => {
+      const jwtPayload = c.get("jwtPayload");
+
+      const existingUser = await db.query.users.findFirst({
+        where: eq(users.email, jwtPayload.email),
+      });
+
+      if (!existingUser) {
+        return c.json(
+          { message: "This account does not exist", data: {} },
+          404,
+        );
+      }
+
+      const { topicId } = c.req.valid("json");
+
+      const existingTopic = await db.query.topics.findFirst({
+        where: eq(topics.id, topicId),
+      });
+
+      if (!existingTopic) {
+        return c.json({ message: "This topic does not exist", data: {} }, 404);
+      }
+
+      const commentId = c.req.param("commentId");
+
+      const existingComment = await db.query.comments.findFirst({
+        where: eq(comments.id, commentId),
+      });
+
+      if (!existingComment) {
+        return c.json(
+          { message: "This comment does not exist", data: {} },
+          404,
+        );
+      }
+
+      if (existingComment.topicId !== existingTopic.id) {
+        return c.json(
+          { message: "This comment does not belong to this topic", data: {} },
+          404,
+        );
+      }
+
+      if (existingComment.userId !== existingUser.id) {
+        return c.json(
+          {
+            message: "You are not allowed to delete this comment",
+            data: {},
+          },
+          403,
+        );
+      }
+
+      await db.delete(comments).where(eq(comments.id, existingComment.id));
+
+      return c.json({
+        message: "You have successfully deleted your comment",
         data: {},
       });
     },

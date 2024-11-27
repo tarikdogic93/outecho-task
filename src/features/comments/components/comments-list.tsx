@@ -29,7 +29,7 @@ export function CommentsList({ topicId }: CommentsListProps) {
   return (
     <div className="flex w-full flex-col items-center justify-start gap-y-2 self-start">
       {comments.map((comment) => (
-        <CommentCard key={comment.id} comment={comment} />
+        <CommentCard key={comment.id} topicId={topicId} comment={comment} />
       ))}
       <Button
         variant="accent"

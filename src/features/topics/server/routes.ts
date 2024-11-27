@@ -96,6 +96,7 @@ const app = new Hono()
 
     const existingTopic = await db
       .select({
+        id: topics.id,
         title: topics.title,
         description: topics.description,
         createdAt: topics.createdAt,

@@ -5,10 +5,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { topicSchema } from "@/features/topics/schemas";
-import { useUpdateTopic } from "@/features/topics/hooks/use-update-topic";
+import { commentSchema } from "@/features/comments/schemas";
+import { useUpdateComment } from "@/features/comments/hooks/use-update-comment";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
@@ -26,41 +25,43 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-type defaultValuesType = z.infer<typeof topicSchema>;
+type defaultValuesType = z.infer<typeof commentSchema>;
 
 const defaultValues: defaultValuesType = {
-  title: "",
-  description: "",
+  content: "",
 };
 
-interface UpdateTopicDialogProps {
-  topic: {
+interface UpdateCommentDialogProps {
+  topicId: string;
+  comment: {
     id: string;
-    title: string;
-    description: string | null;
+    content: string;
   };
   disabled?: boolean;
 }
 
-export function UpdateTopicDialog({ topic, disabled }: UpdateTopicDialogProps) {
+export function UpdateCommentDialog({
+  topicId,
+  comment,
+  disabled,
+}: UpdateCommentDialogProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { mutate, isPending } = useUpdateTopic(topic.id);
+  const { mutate, isPending } = useUpdateComment(comment.id);
 
-  const form = useForm<z.infer<typeof topicSchema>>({
-    resolver: zodResolver(topicSchema),
+  const form = useForm<z.infer<typeof commentSchema>>({
+    resolver: zodResolver(commentSchema),
     defaultValues,
   });
 
   useEffect(() => {
     form.reset({
-      title: topic.title,
-      description: topic.description || "",
+      content: comment.content,
     });
-  }, [topic, form]);
+  }, [comment, form]);
 
-  function onSubmit(values: z.infer<typeof topicSchema>) {
+  function onSubmit(values: z.infer<typeof commentSchema>) {
     mutate(
-      { json: values, param: { topicId: topic.id } },
+      { json: { ...values, topicId }, param: { commentId: comment.id } },
       {
         onSuccess: () => {
           form.reset();
@@ -84,40 +85,22 @@ export function UpdateTopicDialog({ topic, disabled }: UpdateTopicDialogProps) {
       </DialogTrigger>
       <DialogContent className="md:w-[500px]">
         <DialogHeader>
-          <DialogTitle>Update your topic</DialogTitle>
+          <DialogTitle>Modify your Comment</DialogTitle>
           <DialogDescription>
-            Give your topic a title and a brief description
+            Revise your comment to reflect your thoughts
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      autoComplete="off"
-                      placeholder="Enter title"
-                      disabled={isPending}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
+              name="content"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <Textarea
                       className="max-h-56 min-h-56"
-                      placeholder="Enter description"
+                      placeholder="Enter content"
                       disabled={isPending}
                       {...field}
                     />

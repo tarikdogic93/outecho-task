@@ -33,6 +33,7 @@ export function DetailedTopicCard({ topicId }: DetailedTopicCardProps) {
   }
 
   const {
+    id,
     title,
     description,
     createdAt,
@@ -88,7 +89,10 @@ export function DetailedTopicCard({ topicId }: DetailedTopicCardProps) {
                   {showComments ? "Hide comments" : "Show comments"}
                 </Button>
                 <AddCommentDialog topicId={topicId} disabled={isPending} />
-                <UpdateTopicDialog topicId={topicId} disabled={isPending} />
+                <UpdateTopicDialog
+                  topic={{ id, title, description }}
+                  disabled={isPending}
+                />
                 <Button
                   size="sm"
                   variant="destructive"
