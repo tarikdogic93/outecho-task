@@ -1,4 +1,4 @@
-import { DetailedTopicCard } from "@/features/topics/components/detailed-topic-card";
+import { DetailedTopicCardWithComments } from "@/features/topics/components/detailed-topic-card-with-comments";
 
 export default async function page({
   params,
@@ -7,5 +7,5 @@ export default async function page({
 }) {
   const topicId = (await params).topicId;
 
-  return <DetailedTopicCard topicId={topicId} />;
+  return <DetailedTopicCardWithComments topicId={topicId} />;
 }
