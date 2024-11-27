@@ -107,8 +107,18 @@ const app = new Hono()
           email: users.email,
         },
         commentsCount: count(comments.id),
-        likesCount: sql`COUNT(DISTINCT ${likes.userId})`,
-        like: sql<boolean>`MAX(CASE WHEN ${likes.userId} = ${existingUser.id} THEN 1 ELSE 0 END) = 1`,
+        likesCount: sql`
+          COUNT(DISTINCT CASE 
+            WHEN ${likes.commentId} IS NULL AND ${likes.topicId} = ${topics.id} THEN ${likes.userId} 
+            ELSE NULL 
+          END)
+        `,
+        like: sql<boolean>`
+          MAX(CASE 
+            WHEN ${likes.userId} = ${existingUser.id} AND ${likes.commentId} IS NULL AND ${likes.topicId} = ${topics.id} THEN 1 
+            ELSE 0 
+          END) = 1
+        `,
       })
       .from(topics)
       .innerJoin(users, eq(topics.userId, users.id))

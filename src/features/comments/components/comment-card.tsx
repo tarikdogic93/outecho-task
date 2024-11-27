@@ -1,9 +1,11 @@
 "use client";
 
 import { formatDistanceToNowStrict } from "date-fns";
-import { Dot } from "lucide-react";
+import { Dot, Heart } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { useDeleteComment } from "@/features/comments/hooks/use-delete-comment";
+import { useLikeComment } from "@/features/comments/hooks/use-like-comment";
 import { UpdateCommentDialog } from "@/features/comments/components/update-comment-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,14 +23,17 @@ interface CommentCardProps {
       lastName: string | null;
       email: string;
     };
+    like: boolean;
+    likesCount: number;
   };
 }
 
 export function CommentCard({ topicId, comment }: CommentCardProps) {
-  const { id, content, createdAt, updatedAt, user } = comment;
+  const { id, content, createdAt, updatedAt, user, likesCount, like } = comment;
   const { firstName, lastName, email } = user;
 
   const { mutate: deleteComment, isPending } = useDeleteComment(topicId, id);
+  const { mutate: likeComment } = useLikeComment(topicId, id);
 
   const createdAtDate = new Date(createdAt);
   const updatedAtDate = new Date(updatedAt);
@@ -51,9 +56,9 @@ export function CommentCard({ topicId, comment }: CommentCardProps) {
               {timeLabel} {formatDistanceToNowStrict(dateToUse)} ago
             </p>
             <Dot />
-            <p className="text-sm">100000 replies</p>
-            <Dot />
-            <p className="text-sm">100000 likes</p>
+            <p className="text-sm">
+              {likesCount} {likesCount === 1 ? "like" : "likes"}
+            </p>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-x-2">
@@ -74,6 +79,12 @@ export function CommentCard({ topicId, comment }: CommentCardProps) {
                 {isPending ? "Deleting..." : "Delete"}
               </Button>
             </div>
+            <Heart
+              className={cn("cursor-pointer text-primary", {
+                "fill-primary": like,
+              })}
+              onClick={() => likeComment()}
+            />
           </div>
         </div>
       </CardContent>

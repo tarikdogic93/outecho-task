@@ -64,6 +64,9 @@ export const likes = pgTable("likes", {
   topicId: text("topic_id")
     .notNull()
     .references(() => topics.id, { onDelete: "cascade" }),
+  commentId: text("comment_id").references(() => comments.id, {
+    onDelete: "cascade",
+  }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -80,7 +83,7 @@ export const topicsRelations = relations(topics, ({ one, many }) => ({
   likes: many(likes),
 }));
 
-export const commentsRelations = relations(comments, ({ one }) => ({
+export const commentsRelations = relations(comments, ({ one, many }) => ({
   user: one(users, {
     fields: [comments.userId],
     references: [users.id],
@@ -93,6 +96,7 @@ export const commentsRelations = relations(comments, ({ one }) => ({
     fields: [comments.parentCommentId],
     references: [comments.id],
   }),
+  likes: many(likes),
 }));
 
 export const likesRelations = relations(likes, ({ one }) => ({
@@ -103,5 +107,9 @@ export const likesRelations = relations(likes, ({ one }) => ({
   topic: one(topics, {
     fields: [likes.topicId],
     references: [topics.id],
+  }),
+  comment: one(comments, {
+    fields: [likes.commentId],
+    references: [comments.id],
   }),
 }));
