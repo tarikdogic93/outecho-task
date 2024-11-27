@@ -11,7 +11,11 @@ export function TopicsList() {
     useTopics(20);
 
   if (!data || isRefetching) {
-    return <Loader2 className="size-10 animate-spin text-primary" />;
+    return (
+      <div className="flex w-full flex-1 items-center justify-center">
+        <Loader2 className="size-10 animate-spin text-primary" />
+      </div>
+    );
   }
 
   const topics = data.pages
@@ -23,7 +27,7 @@ export function TopicsList() {
   }
 
   return (
-    <div className="flex w-full flex-col items-center justify-start gap-y-2 self-start">
+    <div className="flex w-full flex-1 flex-col items-center justify-start gap-y-2 self-start">
       {topics.map((topic) => (
         <TopicCard key={topic.id} topic={topic} />
       ))}

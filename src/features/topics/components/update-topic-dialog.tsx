@@ -60,7 +60,7 @@ export function UpdateTopicDialog({ topic, disabled }: UpdateTopicDialogProps) {
 
   function onSubmit(values: z.infer<typeof topicSchema>) {
     mutate(
-      { json: values, param: { topicId: topic.id } },
+      { param: { topicId: topic.id }, json: values },
       {
         onSuccess: () => {
           form.reset();

@@ -56,7 +56,7 @@ export function DetailedTopicCard({
   const timeLabel = updatedAtDate > createdAtDate ? "Updated" : "Created";
 
   return (
-    <Card className="h-full w-full max-w-3xl">
+    <Card className="h-full w-full max-w-3xl self-start">
       <CardContent className="p-6">
         <div className="flex flex-col gap-y-2">
           <h3 className="truncate text-xl font-semibold">{title}</h3>

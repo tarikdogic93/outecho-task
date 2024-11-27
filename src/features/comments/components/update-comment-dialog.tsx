@@ -61,7 +61,7 @@ export function UpdateCommentDialog({
 
   function onSubmit(values: z.infer<typeof commentSchema>) {
     mutate(
-      { json: { ...values }, param: { commentId: comment.id } },
+      { param: { commentId: comment.id }, json: values },
       {
         onSuccess: () => {
           form.reset();

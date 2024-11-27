@@ -23,15 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn(
-          inter.className,
-          "flex min-h-screen flex-col items-center antialiased",
-        )}
-      >
+      <body className={cn(inter.className, "min-h-screen antialiased")}>
         <QueryProvider>
           <Header />
-          <main className="flex w-full flex-1 items-center justify-center bg-primary-foreground/30 p-4">
+          <main className="flex min-h-screen flex-col items-center bg-primary-foreground/30 p-4 pt-[88px]">
             {children}
           </main>
           <Toaster />

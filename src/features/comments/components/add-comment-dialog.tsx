@@ -47,7 +47,7 @@ export function AddCommentDialog({ topicId, disabled }: AddCommentDialogProps) {
 
   function onSubmit(values: z.infer<typeof commentSchema>) {
     mutate(
-      { json: { ...values, topicId } },
+      { param: { topicId }, json: values },
       {
         onSuccess: () => {
           form.reset();
