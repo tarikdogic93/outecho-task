@@ -90,9 +90,14 @@ const app = new Hono()
     },
   )
   .post(
-    "/:topicId/add",
+    "/add",
     apiAuthMiddleware,
-    zValidator("json", commentSchema),
+    zValidator(
+      "json",
+      commentSchema.extend({
+        topicId: z.string().min(1, "Topic ID is required"),
+      }),
+    ),
     async (c) => {
       const jwtPayload = c.get("jwtPayload");
 
@@ -107,7 +112,7 @@ const app = new Hono()
         );
       }
 
-      const topicId = c.req.param("topicId");
+      const { topicId, content } = c.req.valid("json");
 
       const existingTopic = await db.query.topics.findFirst({
         where: eq(topics.id, topicId),
@@ -116,8 +121,6 @@ const app = new Hono()
       if (!existingTopic) {
         return c.json({ message: "This topic does not exist", data: {} }, 404);
       }
-
-      const { content } = c.req.valid("json");
 
       await db.insert(comments).values({
         userId: existingUser.id,
