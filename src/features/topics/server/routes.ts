@@ -127,42 +127,34 @@ const app = new Hono()
       data: existingTopic[0],
     });
   })
-  .post(
-    "/create",
-    apiAuthMiddleware,
-    zValidator("json", topicSchema),
-    async (c) => {
-      const jwtPayload = c.get("jwtPayload");
+  .post("/", apiAuthMiddleware, zValidator("json", topicSchema), async (c) => {
+    const jwtPayload = c.get("jwtPayload");
 
-      const existingUser = await db.query.users.findFirst({
-        where: eq(users.email, jwtPayload.email),
-      });
+    const existingUser = await db.query.users.findFirst({
+      where: eq(users.email, jwtPayload.email),
+    });
 
-      if (!existingUser) {
-        return c.json(
-          { message: "This account does not exist", data: {} },
-          404,
-        );
-      }
+    if (!existingUser) {
+      return c.json({ message: "This account does not exist", data: {} }, 404);
+    }
 
-      const { title, description } = c.req.valid("json");
+    const { title, description } = c.req.valid("json");
 
-      const updatedDescription = description ? description : null;
+    const updatedDescription = description ? description : null;
 
-      await db.insert(topics).values({
-        userId: existingUser.id,
-        title,
-        description: updatedDescription,
-      });
+    await db.insert(topics).values({
+      userId: existingUser.id,
+      title,
+      description: updatedDescription,
+    });
 
-      return c.json({
-        message: "You have successfully created your topic",
-        data: {},
-      });
-    },
-  )
-  .post(
-    "/:topicId/update",
+    return c.json({
+      message: "You have successfully created your topic",
+      data: {},
+    });
+  })
+  .patch(
+    "/:topicId",
     apiAuthMiddleware,
     zValidator("json", topicSchema),
     async (c) => {
@@ -266,7 +258,7 @@ const app = new Hono()
       data: {},
     });
   })
-  .post("/:topicId/delete", apiAuthMiddleware, async (c) => {
+  .delete("/:topicId", apiAuthMiddleware, async (c) => {
     const jwtPayload = c.get("jwtPayload");
 
     const existingUser = await db.query.users.findFirst({

@@ -4,17 +4,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
 
-type ResponseType = InferResponseType<
-  (typeof client.api.topics.create)["$post"]
->;
-type RequestType = InferRequestType<(typeof client.api.topics.create)["$post"]>;
+type ResponseType = InferResponseType<(typeof client.api.topics)["$post"]>;
+type RequestType = InferRequestType<(typeof client.api.topics)["$post"]>;
 
 export function useCreateTopic() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
-      const response = await client.api.topics.create["$post"]({ json });
+      const response = await client.api.topics["$post"]({ json });
 
       const data = await response.json();
 

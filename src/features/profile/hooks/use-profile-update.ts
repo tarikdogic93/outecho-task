@@ -4,19 +4,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
 
-type ResponseType = InferResponseType<
-  (typeof client.api.profile.update)["$post"]
->;
-type RequestType = InferRequestType<
-  (typeof client.api.profile.update)["$post"]
->;
+type ResponseType = InferResponseType<(typeof client.api.profile)["$patch"]>;
+type RequestType = InferRequestType<(typeof client.api.profile)["$patch"]>;
 
 export function useProfileUpdate() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
-      const response = await client.api.profile.update["$post"]({ json });
+      const response = await client.api.profile["$patch"]({ json });
 
       const data = await response.json();
 

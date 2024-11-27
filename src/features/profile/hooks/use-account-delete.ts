@@ -5,9 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
 
-type ResponseType = InferResponseType<
-  (typeof client.api.profile.delete)["$post"]
->;
+type ResponseType = InferResponseType<(typeof client.api.profile)["$delete"]>;
 
 export function useAccountDelete() {
   const router = useRouter();
@@ -15,7 +13,7 @@ export function useAccountDelete() {
 
   const mutation = useMutation<ResponseType, Error>({
     mutationFn: async () => {
-      const response = await client.api.profile.delete["$post"]();
+      const response = await client.api.profile["$delete"]();
 
       const data = await response.json();
 

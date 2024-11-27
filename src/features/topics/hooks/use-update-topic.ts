@@ -5,10 +5,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.topics)[":topicId"]["update"]["$post"]
+  (typeof client.api.topics)[":topicId"]["$patch"]
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.topics)[":topicId"]["update"]["$post"]
+  (typeof client.api.topics)[":topicId"]["$patch"]
 >;
 
 export function useUpdateTopic(topicId: string) {
@@ -16,7 +16,7 @@ export function useUpdateTopic(topicId: string) {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
-      const response = await client.api.topics[":topicId"]["update"]["$post"]({
+      const response = await client.api.topics[":topicId"]["$patch"]({
         json,
         param: { topicId },
       });

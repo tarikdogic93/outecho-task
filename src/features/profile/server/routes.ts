@@ -11,8 +11,8 @@ import { apiAuthMiddleware } from "@/lib/api-auth-middleware";
 import { profileSchema } from "@/features/profile/schemas";
 
 const app = new Hono()
-  .post(
-    "/update",
+  .patch(
+    "/",
     apiAuthMiddleware,
     zValidator("json", profileSchema),
     async (c) => {
@@ -71,7 +71,7 @@ const app = new Hono()
       });
     },
   )
-  .post("/delete", apiAuthMiddleware, async (c) => {
+  .delete("/", apiAuthMiddleware, async (c) => {
     const jwtPayload = c.get("jwtPayload");
 
     const existingUser = await db.query.users.findFirst({

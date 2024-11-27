@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.topics)[":topicId"]["delete"]["$post"]
+  (typeof client.api.topics)[":topicId"]["$delete"]
 >;
 
 export function useDeleteTopic(topicId: string) {
@@ -15,7 +15,7 @@ export function useDeleteTopic(topicId: string) {
 
   const mutation = useMutation<ResponseType, Error>({
     mutationFn: async () => {
-      const response = await client.api.topics[":topicId"]["delete"]["$post"]({
+      const response = await client.api.topics[":topicId"]["$delete"]({
         param: { topicId },
       });
 
