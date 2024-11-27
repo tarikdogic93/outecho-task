@@ -5,22 +5,22 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.comments)[":commentId"]["update"]["$post"]
+  (typeof client.api.topics)[":topicId"]["comments"][":commentId"]["$patch"]
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.comments)[":commentId"]["update"]["$post"]
+  (typeof client.api.topics)[":topicId"]["comments"][":commentId"]["$patch"]
 >;
 
-export function useUpdateComment(commentId: string) {
+export function useUpdateComment(topicId: string, commentId: string) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
-      const response = await client.api.comments[":commentId"]["update"][
-        "$post"
-      ]({
+      const response = await client.api.topics[":topicId"]["comments"][
+        ":commentId"
+      ]["$patch"]({
+        param: { topicId, commentId },
         json,
-        param: { commentId },
       });
 
       const data = await response.json();

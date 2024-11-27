@@ -69,9 +69,7 @@ export function CommentCard({ topicId, comment }: CommentCardProps) {
                 size="sm"
                 variant="destructive"
                 disabled={isPending}
-                onClick={() =>
-                  deleteComment({ json: { topicId }, param: { commentId: id } })
-                }
+                onClick={() => deleteComment({ param: { commentId: id } })}
               >
                 {isPending ? "Deleting..." : "Delete"}
               </Button>

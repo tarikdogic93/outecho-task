@@ -6,7 +6,7 @@ export function useComments(topicId: string, limit: number) {
   const query = useInfiniteQuery({
     queryKey: ["comments"],
     queryFn: async ({ pageParam }) => {
-      const response = await client.api.comments[":topicId"]["$get"]({
+      const response = await client.api.topics[":topicId"]["comments"]["$get"]({
         param: { topicId },
         query: { page: `${pageParam}`, limit: `${limit}` },
       });

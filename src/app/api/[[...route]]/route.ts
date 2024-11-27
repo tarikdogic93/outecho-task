@@ -13,7 +13,7 @@ const routes = app
   .route("/auth", auth)
   .route("/profile", profile)
   .route("/topics", topics)
-  .route("/comments", comments);
+  .route("/topics/:topicId/comments", comments);
 
 export const GET = handle(app);
 export const POST = handle(app);

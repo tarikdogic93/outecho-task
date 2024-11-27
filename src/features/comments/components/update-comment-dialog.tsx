@@ -46,7 +46,7 @@ export function UpdateCommentDialog({
   disabled,
 }: UpdateCommentDialogProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { mutate, isPending } = useUpdateComment(comment.id);
+  const { mutate, isPending } = useUpdateComment(topicId, comment.id);
 
   const form = useForm<z.infer<typeof commentSchema>>({
     resolver: zodResolver(commentSchema),
@@ -61,7 +61,7 @@ export function UpdateCommentDialog({
 
   function onSubmit(values: z.infer<typeof commentSchema>) {
     mutate(
-      { json: { ...values, topicId }, param: { commentId: comment.id } },
+      { json: { ...values }, param: { commentId: comment.id } },
       {
         onSuccess: () => {
           form.reset();

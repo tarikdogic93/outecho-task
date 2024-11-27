@@ -17,8 +17,8 @@ export function useUpdateTopic(topicId: string) {
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
       const response = await client.api.topics[":topicId"]["$patch"]({
-        json,
         param: { topicId },
+        json,
       });
 
       const data = await response.json();

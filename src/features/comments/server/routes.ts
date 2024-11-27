@@ -10,7 +10,7 @@ import { commentSchema } from "@/features/comments/schemas";
 
 const app = new Hono()
   .get(
-    "/:topicId",
+    "/",
     apiAuthMiddleware,
     zValidator(
       "query",
@@ -34,6 +34,10 @@ const app = new Hono()
       }
 
       const topicId = c.req.param("topicId");
+
+      if (!topicId) {
+        return c.json({ message: "Topic id is required", data: {} }, 400);
+      }
 
       const existingTopic = await db.query.topics.findFirst({
         where: eq(topics.id, topicId),
@@ -90,14 +94,9 @@ const app = new Hono()
     },
   )
   .post(
-    "/add",
+    "/",
     apiAuthMiddleware,
-    zValidator(
-      "json",
-      commentSchema.extend({
-        topicId: z.string(),
-      }),
-    ),
+    zValidator("json", commentSchema),
     async (c) => {
       const jwtPayload = c.get("jwtPayload");
 
@@ -112,7 +111,11 @@ const app = new Hono()
         );
       }
 
-      const { topicId, content } = c.req.valid("json");
+      const topicId = c.req.param("topicId");
+
+      if (!topicId) {
+        return c.json({ message: "Topic id is required", data: {} }, 400);
+      }
 
       const existingTopic = await db.query.topics.findFirst({
         where: eq(topics.id, topicId),
@@ -121,6 +124,8 @@ const app = new Hono()
       if (!existingTopic) {
         return c.json({ message: "This topic does not exist", data: {} }, 404);
       }
+
+      const { content } = c.req.valid("json");
 
       await db.insert(comments).values({
         userId: existingUser.id,
@@ -134,15 +139,10 @@ const app = new Hono()
       });
     },
   )
-  .post(
-    "/:commentId/update",
+  .patch(
+    "/:commentId",
     apiAuthMiddleware,
-    zValidator(
-      "json",
-      commentSchema.extend({
-        topicId: z.string(),
-      }),
-    ),
+    zValidator("json", commentSchema),
     async (c) => {
       const jwtPayload = c.get("jwtPayload");
 
@@ -157,7 +157,11 @@ const app = new Hono()
         );
       }
 
-      const { topicId, content } = c.req.valid("json");
+      const topicId = c.req.param("topicId");
+
+      if (!topicId) {
+        return c.json({ message: "Topic id is required", data: {} }, 400);
+      }
 
       const existingTopic = await db.query.topics.findFirst({
         where: eq(topics.id, topicId),
@@ -197,6 +201,8 @@ const app = new Hono()
         );
       }
 
+      const { content } = c.req.valid("json");
+
       await db
         .update(comments)
         .set({
@@ -210,76 +216,64 @@ const app = new Hono()
       });
     },
   )
-  .post(
-    "/:commentId/delete",
-    apiAuthMiddleware,
-    zValidator(
-      "json",
-      z.object({
-        topicId: z.string(),
-      }),
-    ),
-    async (c) => {
-      const jwtPayload = c.get("jwtPayload");
+  .delete("/:commentId", apiAuthMiddleware, async (c) => {
+    const jwtPayload = c.get("jwtPayload");
 
-      const existingUser = await db.query.users.findFirst({
-        where: eq(users.email, jwtPayload.email),
-      });
+    const existingUser = await db.query.users.findFirst({
+      where: eq(users.email, jwtPayload.email),
+    });
 
-      if (!existingUser) {
-        return c.json(
-          { message: "This account does not exist", data: {} },
-          404,
-        );
-      }
+    if (!existingUser) {
+      return c.json({ message: "This account does not exist", data: {} }, 404);
+    }
 
-      const { topicId } = c.req.valid("json");
+    const topicId = c.req.param("topicId");
 
-      const existingTopic = await db.query.topics.findFirst({
-        where: eq(topics.id, topicId),
-      });
+    if (!topicId) {
+      return c.json({ message: "Topic id is required", data: {} }, 400);
+    }
 
-      if (!existingTopic) {
-        return c.json({ message: "This topic does not exist", data: {} }, 404);
-      }
+    const existingTopic = await db.query.topics.findFirst({
+      where: eq(topics.id, topicId),
+    });
 
-      const commentId = c.req.param("commentId");
+    if (!existingTopic) {
+      return c.json({ message: "This topic does not exist", data: {} }, 404);
+    }
 
-      const existingComment = await db.query.comments.findFirst({
-        where: eq(comments.id, commentId),
-      });
+    const commentId = c.req.param("commentId");
 
-      if (!existingComment) {
-        return c.json(
-          { message: "This comment does not exist", data: {} },
-          404,
-        );
-      }
+    const existingComment = await db.query.comments.findFirst({
+      where: eq(comments.id, commentId),
+    });
 
-      if (existingComment.topicId !== existingTopic.id) {
-        return c.json(
-          { message: "This comment does not belong to this topic", data: {} },
-          404,
-        );
-      }
+    if (!existingComment) {
+      return c.json({ message: "This comment does not exist", data: {} }, 404);
+    }
 
-      if (existingComment.userId !== existingUser.id) {
-        return c.json(
-          {
-            message: "You are not allowed to delete this comment",
-            data: {},
-          },
-          403,
-        );
-      }
+    if (existingComment.topicId !== existingTopic.id) {
+      return c.json(
+        { message: "This comment does not belong to this topic", data: {} },
+        404,
+      );
+    }
 
-      await db.delete(comments).where(eq(comments.id, existingComment.id));
+    if (existingComment.userId !== existingUser.id) {
+      return c.json(
+        {
+          message: "You are not allowed to delete this comment",
+          data: {},
+        },
+        403,
+      );
+    }
 
-      return c.json({
-        message: "You have successfully deleted your comment",
-        data: {},
-      });
-    },
-  );
+    await db.delete(comments).where(eq(comments.id, existingComment.id));
+
+    return c.json({
+      message: "You have successfully deleted your comment",
+      data: {},
+    });
+  });
 
 export default app;

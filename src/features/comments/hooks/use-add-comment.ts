@@ -5,10 +5,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.comments)["add"]["$post"]
+  (typeof client.api.topics)[":topicId"]["comments"]["$post"]
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.comments)["add"]["$post"]
+  (typeof client.api.topics)[":topicId"]["comments"]["$post"]
 >;
 
 export function useAddComment(topicId: string) {
@@ -16,9 +16,12 @@ export function useAddComment(topicId: string) {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
-      const response = await client.api.comments["add"]["$post"]({
-        json,
-      });
+      const response = await client.api.topics[":topicId"]["comments"]["$post"](
+        {
+          param: { topicId },
+          json,
+        },
+      );
 
       const data = await response.json();
 
