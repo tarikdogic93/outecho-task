@@ -1,11 +1,11 @@
-import { DetailedTopicCardWithComments } from "@/features/topics/components/detailed-topic-card-with-comments";
+import { TopicContent } from "@/components/contents/topic-content";
 
-export default async function page({
+export default async function TopicPage({
   params,
 }: {
   params: Promise<{ topicId: string }>;
 }) {
   const topicId = (await params).topicId;
 
-  return <DetailedTopicCardWithComments topicId={topicId} />;
+  return <TopicContent topicId={topicId} />;
 }

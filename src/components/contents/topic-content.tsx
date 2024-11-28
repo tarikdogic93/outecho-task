@@ -6,13 +6,11 @@ import { cn } from "@/lib/utils";
 import { DetailedTopicCard } from "@/features/topics/components/detailed-topic-card";
 import { CommentsList } from "@/features/comments/components/comments-list";
 
-interface DetailedTopicCardWithCommentsProps {
+interface TopicContent {
   topicId: string;
 }
 
-export function DetailedTopicCardWithComments({
-  topicId,
-}: DetailedTopicCardWithCommentsProps) {
+export function TopicContent({ topicId }: TopicContent) {
   const [showComments, setShowComments] = useState(false);
 
   return (
