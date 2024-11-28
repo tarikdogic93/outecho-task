@@ -31,8 +31,6 @@ export function useSignOut() {
     onSuccess: () => {
       queryClient.invalidateQueries();
 
-      queryClient.clear();
-
       router.push("/");
     },
   });
