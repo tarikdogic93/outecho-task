@@ -45,7 +45,12 @@ const app = new Hono()
             email: users.email,
           },
           commentsCount: sql`COUNT(DISTINCT ${comments.id})`,
-          likesCount: sql`COUNT(DISTINCT ${likes.userId})`,
+          likesCount: sql`
+          COUNT(DISTINCT CASE 
+            WHEN ${likes.commentId} IS NULL AND ${likes.topicId} = ${topics.id} THEN ${likes.userId} 
+            ELSE NULL 
+          END)
+        `,
         })
         .from(topics)
         .innerJoin(users, eq(topics.userId, users.id))
@@ -118,7 +123,12 @@ const app = new Hono()
             email: users.email,
           },
           commentsCount: sql`COUNT(DISTINCT ${comments.id})`,
-          likesCount: sql`COUNT(DISTINCT ${likes.userId})`,
+          likesCount: sql`
+            COUNT(DISTINCT CASE 
+              WHEN ${likes.commentId} IS NULL AND ${likes.topicId} = ${topics.id} THEN ${likes.userId} 
+              ELSE NULL 
+            END)
+          `,
         })
         .from(topics)
         .innerJoin(users, eq(topics.userId, users.id))
