@@ -27,6 +27,7 @@ export function useCreateTopic() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["topics"] });
+      queryClient.invalidateQueries({ queryKey: ["mytopics"] });
 
       toast.success(data.message);
     },

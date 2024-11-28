@@ -4,7 +4,7 @@ import { client } from "@/lib/rpc";
 
 export function useMyTopics(limit: number) {
   const query = useInfiniteQuery({
-    queryKey: ["topics"],
+    queryKey: ["mytopics"],
     queryFn: async ({ pageParam }) => {
       const response = await client.api.topics["me"]["$get"]({
         query: { page: `${pageParam}`, limit: `${limit}` },

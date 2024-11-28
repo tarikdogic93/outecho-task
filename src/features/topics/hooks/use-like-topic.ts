@@ -30,6 +30,7 @@ export function useLikeTopic(topicId: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["topics"] });
+      queryClient.invalidateQueries({ queryKey: ["mytopics"] });
       queryClient.invalidateQueries({ queryKey: [`${topicId}`] });
     },
   });

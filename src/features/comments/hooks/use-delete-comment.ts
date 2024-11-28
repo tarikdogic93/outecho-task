@@ -35,6 +35,7 @@ export function useDeleteComment(topicId: string, commentId: string) {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["topics"] });
+      queryClient.invalidateQueries({ queryKey: ["mytopics"] });
       queryClient.invalidateQueries({ queryKey: [`${topicId}`] });
       queryClient.invalidateQueries({ queryKey: ["comments"] });
 

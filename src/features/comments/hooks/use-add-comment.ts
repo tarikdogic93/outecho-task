@@ -36,6 +36,7 @@ export function useAddComment(topicId: string) {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["topics"] });
+      queryClient.invalidateQueries({ queryKey: ["mytopics"] });
       queryClient.invalidateQueries({ queryKey: [`${topicId}`] });
       queryClient.invalidateQueries({ queryKey: ["comments"] });
 

@@ -34,6 +34,7 @@ export function useUpdateTopic(topicId: string) {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["topics"] });
+      queryClient.invalidateQueries({ queryKey: ["mytopics"] });
       queryClient.invalidateQueries({ queryKey: [`${topicId}`] });
 
       toast.success(data.message);

@@ -28,6 +28,7 @@ export function useProfileUpdate() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["current"] });
       queryClient.invalidateQueries({ queryKey: ["topics"] });
+      queryClient.invalidateQueries({ queryKey: ["mytopics"] });
 
       toast.success(data.message);
     },

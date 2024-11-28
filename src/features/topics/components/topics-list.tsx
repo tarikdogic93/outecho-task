@@ -7,10 +7,10 @@ import { TopicCard } from "@/features/topics/components/topic-card";
 import { Button } from "@/components/ui/button";
 
 export function TopicsList() {
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isRefetching } =
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useTopics(20);
 
-  if (isRefetching || !data) {
+  if (!data) {
     return (
       <div className="flex w-full flex-1 items-center justify-center">
         <Loader2 className="size-10 animate-spin text-primary" />

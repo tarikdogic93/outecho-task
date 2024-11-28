@@ -32,6 +32,7 @@ export function useDeleteTopic(topicId: string) {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["topics"] });
+      queryClient.invalidateQueries({ queryKey: ["mytopics"] });
 
       toast.success(data.message);
 
