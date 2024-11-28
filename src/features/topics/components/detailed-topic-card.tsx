@@ -94,7 +94,7 @@ export function DetailedTopicCard({
               <AddCommentDialog
                 topicId={topicId}
                 disabled={isPending}
-                onCreateComment={onShowComments}
+                onCreateComment={!showComments ? onShowComments : undefined}
               />
               {loggedInUser && loggedInUser.id === userId && (
                 <>

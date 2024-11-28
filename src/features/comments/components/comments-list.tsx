@@ -2,6 +2,7 @@
 
 import { Loader2 } from "lucide-react";
 
+import { useCurrent } from "@/features/auth/hooks/use-current";
 import { useComments } from "@/features/comments/hooks/use-comments";
 import { CommentCard } from "@/features/comments/components/comment-card";
 import { Button } from "@/components/ui/button";
@@ -11,10 +12,11 @@ interface CommentsListProps {
 }
 
 export function CommentsList({ topicId }: CommentsListProps) {
+  const { data: loggedInUser } = useCurrent();
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isRefetching } =
     useComments(topicId, 20);
 
-  if (!data || isRefetching) {
+  if (isRefetching || !data) {
     return <Loader2 className="size-8 animate-spin text-primary" />;
   }
 
@@ -29,7 +31,12 @@ export function CommentsList({ topicId }: CommentsListProps) {
   return (
     <div className="flex w-full flex-col items-center justify-start gap-y-2 self-start">
       {comments.map((comment) => (
-        <CommentCard key={comment.id} topicId={topicId} comment={comment} />
+        <CommentCard
+          key={comment.id}
+          loggedInUserId={loggedInUser?.id}
+          topicId={topicId}
+          comment={comment}
+        />
       ))}
       <Button
         variant="accent"

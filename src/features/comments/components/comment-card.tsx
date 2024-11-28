@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface CommentCardProps {
+  loggedInUserId?: string;
   topicId: string;
   comment: {
     id: string;
@@ -29,12 +30,27 @@ interface CommentCardProps {
   };
 }
 
-export function CommentCard({ topicId, comment }: CommentCardProps) {
-  const { id, content, createdAt, updatedAt, user, likesCount, like } = comment;
-  const { firstName, lastName, email } = user;
+export function CommentCard({
+  loggedInUserId,
+  topicId,
+  comment,
+}: CommentCardProps) {
+  const {
+    id: commentId,
+    content,
+    createdAt,
+    updatedAt,
+    user,
+    likesCount,
+    like,
+  } = comment;
+  const { id: userId, firstName, lastName, email } = user;
 
-  const { mutate: deleteComment, isPending } = useDeleteComment(topicId, id);
-  const { mutate: likeComment } = useLikeComment(topicId, id);
+  const { mutate: deleteComment, isPending } = useDeleteComment(
+    topicId,
+    commentId,
+  );
+  const { mutate: likeComment } = useLikeComment(topicId, commentId);
 
   const createdAtDate = new Date(createdAt);
   const updatedAtDate = new Date(updatedAt);
@@ -43,50 +59,64 @@ export function CommentCard({ topicId, comment }: CommentCardProps) {
     updatedAtDate > createdAtDate ? updatedAtDate : createdAtDate;
   const timeLabel = updatedAtDate > createdAtDate ? "Updated" : "Created";
 
+  const isLoggedInUserOwner = loggedInUserId === userId;
+
   return (
     <Card className="h-full w-full max-w-3xl border-none outline-dashed outline-2 outline-input">
       <CardContent className="p-6">
         <div className="flex flex-col gap-y-2">
           <p className="break-words text-sm text-muted-foreground">{content}</p>
-          <div className="flex items-center">
-            <p className="text-glow text-sm font-bold tracking-wide">
-              {firstName && lastName ? `${firstName} ${lastName}` : email}
-            </p>
-            <Dot />
-            <p className="text-sm">
-              {timeLabel} {formatDistanceToNowStrict(dateToUse)} ago
-            </p>
-            <Dot />
-            <p className="text-sm">
-              {likesCount} {likesCount === 1 ? "like" : "likes"}
-            </p>
-          </div>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-x-2">
-              <UpdateCommentDialog
-                topicId={topicId}
-                comment={{
-                  id,
-                  content,
-                }}
-                disabled={isPending}
-              />
-              <Button
-                size="sm"
-                variant="destructive"
-                disabled={isPending}
-                onClick={() => deleteComment({ param: { commentId: id } })}
-              >
-                {isPending ? "Deleting..." : "Delete"}
-              </Button>
+            <div className="flex items-center">
+              <p className="text-glow text-sm font-bold tracking-wide">
+                {firstName && lastName ? `${firstName} ${lastName}` : email}
+              </p>
+              <Dot />
+              <p className="text-sm">
+                {timeLabel} {formatDistanceToNowStrict(dateToUse)} ago
+              </p>
+              <Dot />
+              <p className="text-sm">
+                {likesCount} {likesCount === 1 ? "like" : "likes"}
+              </p>
             </div>
-            <Heart
-              className={cn("cursor-pointer text-primary", {
-                "fill-primary": like,
-              })}
-              onClick={() => likeComment()}
-            />
+            {!isLoggedInUserOwner && (
+              <Heart
+                className={cn("cursor-pointer text-primary", {
+                  "fill-primary": like,
+                })}
+                onClick={() => likeComment()}
+              />
+            )}
           </div>
+          {isLoggedInUserOwner && (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-x-2">
+                <UpdateCommentDialog
+                  topicId={topicId}
+                  comment={{
+                    id: commentId,
+                    content,
+                  }}
+                  disabled={isPending}
+                />
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  disabled={isPending}
+                  onClick={() => deleteComment({ param: { commentId } })}
+                >
+                  {isPending ? "Deleting..." : "Delete"}
+                </Button>
+              </div>
+              <Heart
+                className={cn("cursor-pointer text-primary", {
+                  "fill-primary": like,
+                })}
+                onClick={() => likeComment()}
+              />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
