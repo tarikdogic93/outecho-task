@@ -31,8 +31,8 @@ const defaultValues: defaultValuesType = {
 };
 
 export function ProfileCard() {
+  const { data: loggedInUser } = useCurrent();
   const { mutate, isPending } = useProfileUpdate();
-  const { data: user } = useCurrent();
 
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -40,15 +40,15 @@ export function ProfileCard() {
   });
 
   useEffect(() => {
-    if (user) {
+    if (loggedInUser) {
       form.reset({
-        firstName: user.firstName || defaultValues.firstName,
-        lastName: user.lastName || defaultValues.lastName,
+        firstName: loggedInUser.firstName || defaultValues.firstName,
+        lastName: loggedInUser.lastName || defaultValues.lastName,
         oldPassword: "",
         newPassword: "",
       });
     }
-  }, [user, form]);
+  }, [loggedInUser, form]);
 
   function onSubmit(values: z.infer<typeof profileSchema>) {
     mutate({ json: values });

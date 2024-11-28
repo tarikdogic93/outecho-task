@@ -1,5 +1,5 @@
-import { TopicsList } from "@/features/topics/components/topics-list";
+import { MyTopicsList } from "@/features/topics/components/my-topics-list";
 
 export default function TopicsPage() {
-  return <TopicsList />;
+  return <MyTopicsList />;
 }

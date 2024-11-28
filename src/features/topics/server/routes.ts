@@ -11,6 +11,64 @@ import { topicSchema } from "@/features/topics/schemas";
 const app = new Hono()
   .get(
     "/",
+    zValidator(
+      "query",
+      z.object({
+        page: z.string(),
+        limit: z.string(),
+      }),
+    ),
+    async (c) => {
+      const page = Number(c.req.query("page") || 1);
+      const limit = Number(c.req.query("limit") || 5);
+      const offset = (page - 1) * limit;
+
+      const totalCountResult = await db
+        .select({
+          totalCount: count(topics.id),
+        })
+        .from(topics)
+        .limit(1);
+
+      const totalCount = totalCountResult[0].totalCount;
+
+      const allTopics = await db
+        .select({
+          id: topics.id,
+          title: topics.title,
+          createdAt: topics.createdAt,
+          updatedAt: topics.updatedAt,
+          user: {
+            id: users.id,
+            firstName: users.firstName,
+            lastName: users.lastName,
+            email: users.email,
+          },
+          commentsCount: count(comments.id),
+          likesCount: sql`COUNT(DISTINCT ${likes.userId})`,
+        })
+        .from(topics)
+        .innerJoin(users, eq(topics.userId, users.id))
+        .leftJoin(comments, eq(topics.id, comments.topicId))
+        .leftJoin(likes, eq(topics.id, likes.topicId))
+        .where(eq(topics.userId, users.id))
+        .groupBy(topics.id, users.id)
+        .limit(limit)
+        .offset(offset)
+        .orderBy(desc(topics.createdAt));
+
+      return c.json({
+        message: "",
+        data: allTopics,
+        pagination: {
+          page: page,
+          totalPages: Math.ceil(totalCount / limit) as number,
+        },
+      });
+    },
+  )
+  .get(
+    "/me",
     apiAuthMiddleware,
     zValidator(
       "query",
@@ -54,6 +112,7 @@ const app = new Hono()
           createdAt: topics.createdAt,
           updatedAt: topics.updatedAt,
           user: {
+            id: users.id,
             firstName: users.firstName,
             lastName: users.lastName,
             email: users.email,
@@ -102,6 +161,7 @@ const app = new Hono()
         createdAt: topics.createdAt,
         updatedAt: topics.updatedAt,
         user: {
+          id: users.id,
           firstName: users.firstName,
           lastName: users.lastName,
           email: users.email,

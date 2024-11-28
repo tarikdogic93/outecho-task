@@ -1,11 +1,5 @@
-import { Button } from "@/components/ui/button";
+import { HomeContent } from "@/components/home-content";
 
 export default function Home() {
-  return (
-    <div>
-      <Button className="bg-primary-foreground" variant="secondary">
-        Check
-      </Button>
-    </div>
-  );
+  return <HomeContent />;
 }

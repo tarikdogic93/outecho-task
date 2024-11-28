@@ -19,6 +19,7 @@ interface CommentCardProps {
     createdAt: string;
     updatedAt: string;
     user: {
+      id: string;
       firstName: string | null;
       lastName: string | null;
       email: string;

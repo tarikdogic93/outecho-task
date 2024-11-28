@@ -4,13 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { ActiveButton } from "@/components/active-button";
 import { UserButton } from "@/features/auth/components/user-button";
 import { useCurrent } from "@/features/auth/hooks/use-current";
 import { CreateTopicDialog } from "@/features/topics/components/create-topic-dialog";
 
 export function Navigation() {
   const pathname = usePathname();
-  const { data: user, isLoading } = useCurrent();
+  const { data: loggedInUser, isLoading } = useCurrent();
 
   const isHomePage = pathname === "/";
   const isSignInPage = pathname === "/sign-in";
@@ -20,8 +21,17 @@ export function Navigation() {
     return null;
   }
 
-  const buttons = user ? (
+  const buttons = loggedInUser ? (
     <>
+      {isHomePage ? (
+        <ActiveButton variant="outline" asChild>
+          <Link href="/">Home</Link>
+        </ActiveButton>
+      ) : (
+        <Button variant="outline" asChild>
+          <Link href="/">Home</Link>
+        </Button>
+      )}
       {isTopicsPage ? (
         <CreateTopicDialog />
       ) : (
@@ -29,7 +39,7 @@ export function Navigation() {
           <Link href="/topics">My topics</Link>
         </Button>
       )}
-      <UserButton user={user} />
+      <UserButton user={loggedInUser} />
     </>
   ) : isHomePage ? (
     <>

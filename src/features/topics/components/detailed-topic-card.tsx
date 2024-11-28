@@ -4,6 +4,7 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { Dot, Heart, Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useCurrent } from "@/features/auth/hooks/use-current";
 import { useTopic } from "@/features/topics/hooks/use-topic";
 import { useDeleteTopic } from "@/features/topics/hooks/use-delete-topic";
 import { useLikeTopic } from "@/features/topics/hooks/use-like-topic";
@@ -23,11 +24,12 @@ export function DetailedTopicCard({
   showComments,
   onShowComments,
 }: DetailedTopicCardProps) {
-  const { data: topic, isLoading } = useTopic(topicId);
+  const { data: loggedInUser, isLoading: isLoggedInUserLoading } = useCurrent();
+  const { data: topic, isLoading: isTopicLoading } = useTopic(topicId);
   const { mutate: deleteTopic, isPending } = useDeleteTopic(topicId);
   const { mutate: likeTopic } = useLikeTopic(topicId);
 
-  if (isLoading) {
+  if (isLoggedInUserLoading || isTopicLoading) {
     return <Loader2 className="size-10 animate-spin text-primary" />;
   }
 
@@ -36,7 +38,6 @@ export function DetailedTopicCard({
   }
 
   const {
-    id,
     title,
     description,
     createdAt,
@@ -46,7 +47,7 @@ export function DetailedTopicCard({
     likesCount,
     like,
   } = topic;
-  const { firstName, lastName, email } = user;
+  const { id: userId, firstName, lastName, email } = user;
 
   const createdAtDate = new Date(createdAt);
   const updatedAtDate = new Date(updatedAt);
@@ -91,18 +92,22 @@ export function DetailedTopicCard({
                 {showComments ? "Hide comments" : "Show comments"}
               </Button>
               <AddCommentDialog topicId={topicId} disabled={isPending} />
-              <UpdateTopicDialog
-                topic={{ id, title, description }}
-                disabled={isPending}
-              />
-              <Button
-                size="sm"
-                variant="destructive"
-                disabled={isPending}
-                onClick={() => deleteTopic()}
-              >
-                {isPending ? "Deleting..." : "Delete"}
-              </Button>
+              {loggedInUser && loggedInUser.id === userId && (
+                <>
+                  <UpdateTopicDialog
+                    topic={{ id: topicId, title, description }}
+                    disabled={isPending}
+                  />
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    disabled={isPending}
+                    onClick={() => deleteTopic()}
+                  >
+                    {isPending ? "Deleting..." : "Delete"}
+                  </Button>
+                </>
+              )}
             </div>
             <Heart
               className={cn("cursor-pointer text-primary", {

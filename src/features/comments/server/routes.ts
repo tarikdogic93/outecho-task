@@ -69,6 +69,7 @@ const app = new Hono()
           createdAt: comments.createdAt,
           updatedAt: comments.updatedAt,
           user: {
+            id: users.id,
             firstName: users.firstName,
             lastName: users.lastName,
             email: users.email,

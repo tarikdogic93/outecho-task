@@ -2,13 +2,13 @@
 
 import { Loader2 } from "lucide-react";
 
-import { useTopics } from "@/features/topics/hooks/use-topics";
+import { useMyTopics } from "@/features/topics/hooks/use-my-topics";
 import { TopicCard } from "@/features/topics/components/topic-card";
 import { Button } from "@/components/ui/button";
 
-export function TopicsList() {
+export function MyTopicsList() {
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isRefetching } =
-    useTopics(20);
+    useMyTopics(20);
 
   if (isRefetching || !data) {
     return (

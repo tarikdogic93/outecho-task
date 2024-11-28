@@ -17,6 +17,7 @@ const app = new Hono()
 
     const user = await db.query.users.findFirst({
       columns: {
+        id: true,
         firstName: true,
         lastName: true,
         email: true,
