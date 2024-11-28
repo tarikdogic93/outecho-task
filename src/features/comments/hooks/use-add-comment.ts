@@ -35,10 +35,7 @@ export function useAddComment(topicId: string) {
       toast.error(error.message);
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["topics"] });
-      queryClient.invalidateQueries({ queryKey: ["mytopics"] });
-      queryClient.invalidateQueries({ queryKey: [`${topicId}`] });
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+      queryClient.invalidateQueries();
 
       toast.success(data.message);
     },

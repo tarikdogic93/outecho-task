@@ -14,7 +14,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface UserButtonProps {
-  user: { firstName: string | null; lastName: string | null; email: string };
+  user: {
+    id: string;
+    firstName: string | null;
+    lastName: string | null;
+    email: string;
+  };
 }
 
 export function UserButton({ user }: UserButtonProps) {

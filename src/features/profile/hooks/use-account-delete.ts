@@ -27,7 +27,7 @@ export function useAccountDelete() {
       toast.error(error.message);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["current"] });
+      queryClient.invalidateQueries();
 
       router.push("/");
     },
