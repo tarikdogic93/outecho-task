@@ -34,9 +34,14 @@ const defaultValues: defaultValuesType = {
 interface AddCommentDialogProps {
   topicId: string;
   disabled?: boolean;
+  onCreateComment?: () => void;
 }
 
-export function AddCommentDialog({ topicId, disabled }: AddCommentDialogProps) {
+export function AddCommentDialog({
+  topicId,
+  disabled,
+  onCreateComment,
+}: AddCommentDialogProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { mutate, isPending } = useAddComment(topicId);
 
@@ -53,6 +58,10 @@ export function AddCommentDialog({ topicId, disabled }: AddCommentDialogProps) {
           form.reset();
 
           setIsDialogOpen(false);
+
+          if (onCreateComment) {
+            onCreateComment();
+          }
         },
       },
     );

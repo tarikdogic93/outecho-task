@@ -91,7 +91,11 @@ export function DetailedTopicCard({
               >
                 {showComments ? "Hide comments" : "Show comments"}
               </Button>
-              <AddCommentDialog topicId={topicId} disabled={isPending} />
+              <AddCommentDialog
+                topicId={topicId}
+                disabled={isPending}
+                onCreateComment={onShowComments}
+              />
               {loggedInUser && loggedInUser.id === userId && (
                 <>
                   <UpdateTopicDialog
