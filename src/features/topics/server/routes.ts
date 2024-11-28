@@ -44,7 +44,7 @@ const app = new Hono()
             lastName: users.lastName,
             email: users.email,
           },
-          commentsCount: count(comments.id),
+          commentsCount: sql`COUNT(DISTINCT ${comments.id})`,
           likesCount: sql`COUNT(DISTINCT ${likes.userId})`,
         })
         .from(topics)
@@ -117,7 +117,7 @@ const app = new Hono()
             lastName: users.lastName,
             email: users.email,
           },
-          commentsCount: count(comments.id),
+          commentsCount: sql`COUNT(DISTINCT ${comments.id})`,
           likesCount: sql`COUNT(DISTINCT ${likes.userId})`,
         })
         .from(topics)
@@ -166,7 +166,7 @@ const app = new Hono()
           lastName: users.lastName,
           email: users.email,
         },
-        commentsCount: count(comments.id),
+        commentsCount: sql`COUNT(DISTINCT ${comments.id})`,
         likesCount: sql`
           COUNT(DISTINCT CASE 
             WHEN ${likes.commentId} IS NULL AND ${likes.topicId} = ${topics.id} THEN ${likes.userId} 
