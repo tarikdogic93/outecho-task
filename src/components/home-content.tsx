@@ -4,7 +4,11 @@ import { useCurrent } from "@/features/auth/hooks/use-current";
 import { TopicsList } from "@/features/topics/components/topics-list";
 
 export function HomeContent() {
-  const { data: loggedInUser } = useCurrent();
+  const { data: loggedInUser, isLoading } = useCurrent();
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <>

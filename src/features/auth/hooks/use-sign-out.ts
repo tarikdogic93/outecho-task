@@ -29,7 +29,9 @@ export function useSignOut() {
       toast.error(error.message);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["current"] });
+      queryClient.invalidateQueries();
+
+      queryClient.clear();
 
       router.push("/");
     },
