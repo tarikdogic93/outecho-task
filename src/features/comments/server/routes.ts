@@ -85,7 +85,11 @@ const app = new Hono()
         .groupBy(comments.id, users.id, topics.id)
         .limit(limit)
         .offset(offset)
-        .orderBy(desc(comments.createdAt));
+        .orderBy(
+          desc(
+            sql`COUNT(DISTINCT ${likes.userId}) FILTER (WHERE ${likes.commentId} = ${comments.id})`,
+          ),
+        );
 
       return c.json({
         message: "",
