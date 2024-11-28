@@ -34,7 +34,7 @@ export function DetailedTopicCard({
   }
 
   if (!topic) {
-    return <p className="font-medium">Topic not found</p>;
+    return null;
   }
 
   const {

@@ -26,7 +26,7 @@ export default function RootLayout({
       <body className={cn(inter.className, "min-h-screen antialiased")}>
         <QueryProvider>
           <Header />
-          <main className="flex min-h-screen flex-col items-center bg-primary-foreground/30 p-4 pt-[88px]">
+          <main className="flex min-h-screen flex-col items-center bg-primary-foreground/30 p-4 pt-28">
             {children}
           </main>
           <Toaster />

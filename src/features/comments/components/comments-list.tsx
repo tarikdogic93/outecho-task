@@ -13,11 +13,15 @@ interface CommentsListProps {
 
 export function CommentsList({ topicId }: CommentsListProps) {
   const { data: loggedInUser } = useCurrent();
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isRefetching } =
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isLoading } =
     useComments(topicId, 20);
 
-  if (isRefetching || !data) {
+  if (isLoading) {
     return <Loader2 className="size-8 animate-spin text-primary" />;
+  }
+
+  if (!data) {
+    return null;
   }
 
   const comments = data.pages
@@ -25,7 +29,7 @@ export function CommentsList({ topicId }: CommentsListProps) {
     .flatMap((page) => page?.data || []);
 
   if (comments.length === 0) {
-    return <p className="font-medium">No comments found</p>;
+    return null;
   }
 
   return (
