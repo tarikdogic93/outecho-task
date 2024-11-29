@@ -24,7 +24,7 @@ export function TopicsList() {
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-y-2">
-      {data.pages[0].data.length === 0 ? (
+      {data.pages[0].data.length > 0 ? (
         <>
           {data.pages.map((page) =>
             page?.data.map((topic) => (
