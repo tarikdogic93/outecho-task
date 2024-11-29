@@ -5,7 +5,7 @@ import { LogOut, UserPen } from "lucide-react";
 
 import { useSignOut } from "@/features/auth/hooks/use-sign-out";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +19,7 @@ interface UserButtonProps {
     firstName: string | null;
     lastName: string | null;
     email: string;
+    image: string | null;
   };
 }
 
@@ -26,7 +27,7 @@ export function UserButton({ user }: UserButtonProps) {
   const router = useRouter();
   const { mutate: signOut } = useSignOut();
 
-  const { firstName, lastName, email } = user;
+  const { firstName, lastName, email, image } = user;
 
   const avatarFallback =
     firstName && lastName
@@ -36,7 +37,8 @@ export function UserButton({ user }: UserButtonProps) {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger className="relative outline-none">
-        <Avatar className="size-10">
+        <Avatar className="size-10 border">
+          <AvatarImage src={image ? image : undefined} />
           <AvatarFallback className="flex items-center justify-center bg-primary/20 font-medium">
             {avatarFallback}
           </AvatarFallback>
@@ -49,7 +51,8 @@ export function UserButton({ user }: UserButtonProps) {
         sideOffset={10}
       >
         <div className="flex flex-col items-center justify-center gap-2 px-2.5 py-4">
-          <Avatar className="size-[52px]">
+          <Avatar className="size-[52px] border">
+            <AvatarImage src={image ? image : undefined} />
             <AvatarFallback className="flex items-center justify-center bg-primary/20 text-xl font-medium">
               {avatarFallback}
             </AvatarFallback>

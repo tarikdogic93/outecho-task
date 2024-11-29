@@ -37,6 +37,7 @@ const app = new Hono().get(
         firstName: users.firstName,
         lastName: users.lastName,
         email: users.email,
+        image: users.image,
         createdAt: users.createdAt,
         updatedAt: users.updatedAt,
         commentsCount: sql`COUNT(DISTINCT ${comments.id})`,

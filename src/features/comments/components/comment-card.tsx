@@ -24,6 +24,7 @@ interface CommentCardProps {
       firstName: string | null;
       lastName: string | null;
       email: string;
+      image: string | null;
     };
     like: boolean;
     likesCount: number;

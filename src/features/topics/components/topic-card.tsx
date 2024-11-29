@@ -17,6 +17,7 @@ interface TopicCardProps {
       firstName: string | null;
       lastName: string | null;
       email: string;
+      image: string | null;
     };
     commentsCount: number;
     likesCount: number;

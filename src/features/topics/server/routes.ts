@@ -72,6 +72,7 @@ const app = new Hono()
             firstName: users.firstName,
             lastName: users.lastName,
             email: users.email,
+            image: users.image,
           },
           commentsCount: sql`COUNT(DISTINCT ${comments.id})`,
           likesCount: sql`
@@ -150,6 +151,7 @@ const app = new Hono()
             firstName: users.firstName,
             lastName: users.lastName,
             email: users.email,
+            image: users.image,
           },
           commentsCount: sql`COUNT(DISTINCT ${comments.id})`,
           likesCount: sql`
@@ -204,6 +206,7 @@ const app = new Hono()
           firstName: users.firstName,
           lastName: users.lastName,
           email: users.email,
+          image: users.image,
         },
         commentsCount: sql`COUNT(DISTINCT ${comments.id})`,
         likesCount: sql`

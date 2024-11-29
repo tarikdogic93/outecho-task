@@ -73,6 +73,7 @@ const app = new Hono()
             firstName: users.firstName,
             lastName: users.lastName,
             email: users.email,
+            image: users.image,
           },
           likesCount: sql`COUNT(DISTINCT ${likes.userId}) FILTER (WHERE ${likes.commentId} = ${comments.id})`,
           like: sql<boolean>`MAX(CASE WHEN ${likes.userId} = ${existingUser.id} AND ${likes.commentId} = ${comments.id} THEN 1 ELSE 0 END) = 1`,

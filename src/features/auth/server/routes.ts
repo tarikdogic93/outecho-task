@@ -8,6 +8,7 @@ import { zValidator } from "@hono/zod-validator";
 import { db } from "@/db";
 import { users } from "@/db/schemas";
 import { AUTH_COOKIE } from "@/constants";
+import { generateRoboHashAvatar } from "@/lib/utils";
 import { apiAuthMiddleware } from "@/lib/api-auth-middleware";
 import { signInSchema, signUpSchema } from "@/features/auth/schemas";
 
@@ -21,6 +22,7 @@ const app = new Hono()
         firstName: true,
         lastName: true,
         email: true,
+        image: true,
       },
       where: eq(users.email, jwtPayload.email),
     });
@@ -90,10 +92,13 @@ const app = new Hono()
     const updatedFirstName = firstName ? firstName : null;
     const updatedLastName = lastName ? lastName : null;
 
+    const imageUrl = await generateRoboHashAvatar(email);
+
     await db.insert(users).values({
       firstName: updatedFirstName,
       lastName: updatedLastName,
       email,
+      image: imageUrl,
       password: hashedPassword,
     });
 
