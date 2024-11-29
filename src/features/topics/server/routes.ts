@@ -11,6 +11,7 @@ import { topicSchema } from "@/features/topics/schemas";
 const app = new Hono()
   .get(
     "/",
+    apiAuthMiddleware,
     zValidator(
       "query",
       z.object({
@@ -20,6 +21,19 @@ const app = new Hono()
       }),
     ),
     async (c) => {
+      const jwtPayload = c.get("jwtPayload");
+
+      const existingUser = await db.query.users.findFirst({
+        where: eq(users.email, jwtPayload.email),
+      });
+
+      if (!existingUser) {
+        return c.json(
+          { message: "This account does not exist", data: {} },
+          404,
+        );
+      }
+
       const page = Number(c.req.query("page") || 1);
       const limit = Number(c.req.query("limit") || 5);
       const offset = (page - 1) * limit;

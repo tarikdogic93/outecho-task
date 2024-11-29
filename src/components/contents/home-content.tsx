@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
+
 import { useCurrent } from "@/features/auth/hooks/use-current";
 import { TopicsList } from "@/features/topics/components/topics-list";
+import { UsersList } from "@/features/users/components/users-list";
 import { HomeContentSelector } from "@/components/selectors/home-content-selector";
-import { useState } from "react";
 
 export function HomeContent() {
   const [selectedContent, setSelectedContent] = useState("latestTopics");
@@ -22,7 +24,11 @@ export function HomeContent() {
             value={selectedContent}
             onValueChange={setSelectedContent}
           />
-          <TopicsList sortBy={selectedContent} />
+          {selectedContent === "usersWithMostComments" ? (
+            <UsersList />
+          ) : (
+            <TopicsList sortBy={selectedContent} />
+          )}
         </div>
       ) : (
         <div className="flex w-full flex-1 flex-col items-center justify-center gap-y-4">

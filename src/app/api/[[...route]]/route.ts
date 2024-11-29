@@ -3,6 +3,7 @@ import { handle } from "hono/vercel";
 
 import auth from "@/features/auth/server/routes";
 import profile from "@/features/profile/server/routes";
+import users from "@/features/users/server/routes";
 import topics from "@/features/topics/server/routes";
 import comments from "@/features/comments/server/routes";
 
@@ -12,6 +13,7 @@ const app = new Hono().basePath("/api");
 const routes = app
   .route("/auth", auth)
   .route("/profile", profile)
+  .route("/users", users)
   .route("/topics", topics)
   .route("/topics/:topicId/comments", comments);
 
