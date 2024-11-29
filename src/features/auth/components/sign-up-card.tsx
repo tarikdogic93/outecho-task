@@ -129,8 +129,8 @@ export function SignUpCard() {
       <div className="px-7">
         <Separator />
       </div>
-      <CardContent className="4 flex items-center justify-center">
-        <p className="text-sm">
+      <CardContent className="flex items-center justify-center p-6">
+        <p className="text-center text-sm">
           Already have an account?{" "}
           <Link href="/sign-in">
             <span className="underline underline-offset-2">Sign In</span>

@@ -9,7 +9,7 @@ export function Header() {
       <div className="mx-auto flex h-10 max-w-screen-2xl items-center justify-between">
         <Link className="flex items-center gap-x-2" href="/">
           <Image src="/logo.svg" alt="Logo" width={28} height={28} priority />
-          <p className="text-sm font-semibold">TopicHub</p>
+          <p className="hidden text-sm font-semibold md:block">TopicHub</p>
         </Link>
         <Navigation />
       </div>

@@ -92,7 +92,7 @@ export function SignInCard() {
         <Separator />
       </div>
       <CardContent className="flex items-center justify-center p-6">
-        <p className="text-sm">
+        <p className="text-center text-sm">
           Don&apos;t have an account?{" "}
           <Link href="/sign-up">
             <span className="underline underline-offset-2">Sign Up</span>
