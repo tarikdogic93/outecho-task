@@ -23,10 +23,9 @@ export function TopicsList() {
   }
 
   return (
-    <div className="flex w-full flex-1 flex-col items-center gap-y-10">
-      <h1 className="text-3xl font-semibold">Explore topics</h1>
-      {data.pages[0].data.length > 0 ? (
-        <div className="flex w-full flex-1 flex-col items-center gap-y-2">
+    <div className="flex w-full flex-1 flex-col items-center gap-y-2">
+      {data.pages[0].data.length === 0 ? (
+        <>
           {data.pages.map((page) =>
             page?.data.map((topic) => (
               <TopicCard key={topic.id} topic={topic} />
@@ -43,7 +42,7 @@ export function TopicsList() {
                 ? "Load more"
                 : "Nothing more"}
           </Button>
-        </div>
+        </>
       ) : (
         <p className="font-medium">No topics found</p>
       )}
