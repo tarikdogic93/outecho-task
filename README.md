@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TopicHub
 
-## Getting Started
+**TopicHub** is a full-stack web application built using [_Next.js_](https://nextjs.org/), [_Hono.js_](https://hono.dev/), [_TypeScript_](https://www.typescriptlang.org/), [_Tailwind CSS_](https://tailwindcss.com/), [_Shadcn UI_](https://ui.shadcn.com/), [_Drizzle ORM_](https://orm.drizzle.team/), [_Neon PostgreSQL_](https://neon.tech/), [_Zod_](https://zod.dev/), and [_Knock_](https://knock.app/) for notifications. The app allows users to interact with topics and comments, with features like user authentication, topic creation, comment submission, and notifications. The project is deployed to [_Vercel_](https://vercel.com/).
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## **Features**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Homepage**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+  - Displays the latest 20 topics with "Load More" functionality.
+  - Lists users with the highest number of comments.
+  - Shows topics with the most likes (hot topics).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Topic Page**
 
-## Learn More
+  - Displays details of a topic and its comments.
+  - Users can like/dislike topics and comments.
+  - Logged-in users can add, edit, or delete comments.
+  - Only topic authors can edit or delete their topics.
 
-To learn more about Next.js, take a look at the following resources:
+- **User Authentication**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+  - Login and registration system with validation.
+  - Profile page for updating user details and changing passwords.
+  - Avatar image generated using [_RoboHash API_](https://robohash.org/).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Notifications**
+  - Users are notified when someone comments on their topic.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## **Environment Variables**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Before running the project, make sure to set up the following environment variables:
+
+- `NEXT_PUBLIC_APP_URL` - The URL of the application
+  (e.g., `http://localhost:3000/` in development or
+  `https://outecho-task.vercel.app/` in production)
+- `DATABASE_URL` - Connection string for the PostgreSQL database provided by Neon.
+- `JWT_SECRET` - Secret key for signing JWT tokens.
+- `ROBOHASH_API_URL` - URL for the RoboHash API, used for generating avatars (e.g., `https://robohash.org/`).
+- `NEXT_PUBLIC_KNOCK_API_KEY` - Your Knock API key for notifications.
+- `NEXT_PUBLIC_KNOCK_FEED_ID` - Your Knock feed ID.
+- `KNOCK_SECRET_API_KEY` - Secret API key for Knock notifications.
+
+---
+
+## **How to Run the Project Locally**
+
+### **Requirements**
+
+- Node.js v22.x (with `bun` package manager installed)
+
+### **Steps**
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/tarikdogic93/outecho-task
+   cd outecho-task
+   ```
+
+2. Install dependencies using bun
+
+   ```
+   bun install
+   ```
+
+3. Set up environment variables:
+
+- Create a `.env.local` file in the root directory.
+- Populate it with the necessary environment variables listed above.
+
+4. Set up the PostgreSQL database:
+
+- Make sure you have a PostgreSQL instance running using a hosted solution like [_Neon_](https://neon.tech/).
+- Create a database for the application and ensure that the DATABASE_URL environment variable is correctly configured in your `.env.local` file.
+
+5. Run the development server:
+
+   `bun run dev`
+
+This should start the app on `http://localhost:3000`.
