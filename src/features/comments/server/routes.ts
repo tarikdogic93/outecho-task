@@ -2,11 +2,14 @@ import { Hono } from "hono";
 import { desc, count, eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
+import { Knock } from "@knocklabs/node";
 
 import { db } from "@/db";
 import { users, topics, comments, likes } from "@/db/schemas";
 import { apiAuthMiddleware } from "@/lib/api-auth-middleware";
 import { commentSchema } from "@/features/comments/schemas";
+
+const knock = new Knock(process.env.KNOCK_SECRET_API_KEY!);
 
 const app = new Hono()
   .get(
@@ -111,6 +114,13 @@ const app = new Hono()
 
       const existingUser = await db.query.users.findFirst({
         where: eq(users.email, jwtPayload.email),
+        columns: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          image: true,
+        },
       });
 
       if (!existingUser) {
@@ -134,13 +144,45 @@ const app = new Hono()
         return c.json({ message: "This topic does not exist", data: {} }, 404);
       }
 
+      const existingTopicOwner = await db.query.users.findFirst({
+        where: eq(users.id, existingTopic.userId),
+        columns: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          image: true,
+        },
+      });
+
       const { content } = c.req.valid("json");
 
-      await db.insert(comments).values({
-        userId: existingUser.id,
-        topicId: existingTopic.id,
-        content,
-      });
+      const newComment = await db
+        .insert(comments)
+        .values({
+          userId: existingUser.id,
+          topicId: existingTopic.id,
+          content,
+        })
+        .returning({
+          id: comments.id,
+          content: comments.content,
+        });
+
+      if (existingTopicOwner && existingUser.id !== existingTopicOwner.id) {
+        await knock.workflows.trigger("new-comment", {
+          data: {
+            url: `/topics/${existingTopic.id}`,
+            topic: {
+              id: existingTopic.id,
+              title: existingTopic.title,
+            },
+            comment: newComment[0],
+          },
+          actor: existingUser,
+          recipients: [existingTopicOwner],
+        });
+      }
 
       return c.json({
         message: "You have successfully created your comment",

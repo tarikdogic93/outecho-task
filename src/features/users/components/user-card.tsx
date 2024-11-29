@@ -31,7 +31,7 @@ export function UserCard({ user }: UserCardProps) {
     <Card className="h-full w-full max-w-3xl">
       <CardContent className="p-6">
         <div className="flex gap-x-4">
-          <Avatar className="size-10 border">
+          <Avatar className="size-10 border-2 border-primary">
             <AvatarImage src={image ? image : undefined} />
             <AvatarFallback className="flex items-center justify-center bg-primary/20 font-medium">
               {avatarFallback}

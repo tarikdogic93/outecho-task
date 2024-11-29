@@ -37,7 +37,7 @@ export function UserButton({ user }: UserButtonProps) {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger className="relative outline-none">
-        <Avatar className="size-10 border">
+        <Avatar className="size-10 border-2 border-primary">
           <AvatarImage src={image ? image : undefined} />
           <AvatarFallback className="flex items-center justify-center bg-primary/20 font-medium">
             {avatarFallback}
@@ -51,7 +51,7 @@ export function UserButton({ user }: UserButtonProps) {
         sideOffset={10}
       >
         <div className="flex flex-col items-center justify-center gap-2 px-2.5 py-4">
-          <Avatar className="size-[52px] border">
+          <Avatar className="size-[52px] border-2 border-primary">
             <AvatarImage src={image ? image : undefined} />
             <AvatarFallback className="flex items-center justify-center bg-primary/20 text-xl font-medium">
               {avatarFallback}

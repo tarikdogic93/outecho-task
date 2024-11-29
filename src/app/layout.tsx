@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { KnockLabsProvider } from "@/components/providers/knock-labs-provider";
 import { Header } from "@/components/header";
 
 import "./globals.css";
@@ -25,11 +26,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(inter.className, "min-h-screen antialiased")}>
         <QueryProvider>
-          <Header />
-          <main className="flex min-h-screen flex-col items-center bg-primary-foreground/30 p-4 pt-28">
-            {children}
-          </main>
-          <Toaster />
+          <KnockLabsProvider>
+            <Header />
+            <main className="flex min-h-screen flex-col items-center bg-primary-foreground/30 p-4 pt-28">
+              {children}
+            </main>
+            <Toaster />
+          </KnockLabsProvider>
         </QueryProvider>
       </body>
     </html>

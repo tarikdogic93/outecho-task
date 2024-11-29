@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { ActiveButton } from "@/components/buttons/active-button";
 import { UserButton } from "@/features/auth/components/user-button";
 import { useCurrent } from "@/features/auth/hooks/use-current";
 import { CreateTopicDialog } from "@/features/topics/components/create-topic-dialog";
+import { NotificationButton } from "@/features/notifications/components/notification-button";
 
 export function Navigation() {
   const pathname = usePathname();
@@ -23,15 +23,9 @@ export function Navigation() {
 
   const buttons = loggedInUser ? (
     <>
-      {isHomePage ? (
-        <ActiveButton variant="outline" asChild>
-          <Link href="/">Home</Link>
-        </ActiveButton>
-      ) : (
-        <Button variant="outline" asChild>
-          <Link href="/">Home</Link>
-        </Button>
-      )}
+      <Button variant="outline" asChild>
+        <Link href="/">Home</Link>
+      </Button>
       {isTopicsPage ? (
         <CreateTopicDialog />
       ) : (
@@ -39,6 +33,7 @@ export function Navigation() {
           <Link href="/topics">My topics</Link>
         </Button>
       )}
+      <NotificationButton />
       <UserButton user={loggedInUser} />
     </>
   ) : isHomePage ? (
