@@ -18,24 +18,22 @@ export function MyTopicsList() {
     );
   }
 
-  if (!data) {
+  if (!data || !data.pages[0]) {
     return null;
   }
-
-  const topics = data.pages
-    .filter((page) => page?.data)
-    .flatMap((page) => page?.data || []);
 
   return (
     <div className="flex w-full flex-1 flex-col items-center gap-y-10">
       <h1 className="text-3xl font-semibold">
         Explore <span className="text-primary">your</span> topics
       </h1>
-      {topics.length > 0 && (
+      {data.pages[0].data.length > 0 ? (
         <div className="flex w-full flex-1 flex-col items-center gap-y-2">
-          {topics.map((topic) => (
-            <TopicCard key={topic.id} topic={topic} />
-          ))}
+          {data.pages.map((page) =>
+            page?.data.map((topic) => (
+              <TopicCard key={topic.id} topic={topic} />
+            )),
+          )}
           <Button
             variant="accent"
             disabled={!hasNextPage || isFetchingNextPage}
@@ -48,6 +46,8 @@ export function MyTopicsList() {
                 : "Nothing more"}
           </Button>
         </div>
+      ) : (
+        <p className="font-medium">No topics found</p>
       )}
     </div>
   );

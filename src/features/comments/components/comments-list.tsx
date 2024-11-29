@@ -20,39 +20,39 @@ export function CommentsList({ topicId }: CommentsListProps) {
     return <Loader2 className="size-8 animate-spin text-primary" />;
   }
 
-  if (!data) {
-    return null;
-  }
-
-  const comments = data.pages
-    .filter((page) => page?.data)
-    .flatMap((page) => page?.data || []);
-
-  if (comments.length === 0) {
+  if (!data || !data.pages[0]) {
     return null;
   }
 
   return (
     <div className="flex w-full flex-col items-center justify-start gap-y-2 self-start">
-      {comments.map((comment) => (
-        <CommentCard
-          key={comment.id}
-          loggedInUserId={loggedInUser?.id}
-          topicId={topicId}
-          comment={comment}
-        />
-      ))}
-      <Button
-        variant="accent"
-        disabled={!hasNextPage || isFetchingNextPage}
-        onClick={() => fetchNextPage()}
-      >
-        {isFetchingNextPage
-          ? "Loading more..."
-          : hasNextPage
-            ? "Load more"
-            : "Nothing more"}
-      </Button>
+      {data.pages[0].data.length > 0 ? (
+        <>
+          {data.pages.map((page) =>
+            page?.data.map((comment) => (
+              <CommentCard
+                key={comment.id}
+                loggedInUserId={loggedInUser?.id}
+                topicId={topicId}
+                comment={comment}
+              />
+            )),
+          )}
+          <Button
+            variant="accent"
+            disabled={!hasNextPage || isFetchingNextPage}
+            onClick={() => fetchNextPage()}
+          >
+            {isFetchingNextPage
+              ? "Loading more..."
+              : hasNextPage
+                ? "Load more"
+                : "Nothing more"}
+          </Button>
+        </>
+      ) : (
+        <p className="font-medium">No comments found</p>
+      )}
     </div>
   );
 }
