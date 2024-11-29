@@ -2,8 +2,11 @@
 
 import { useCurrent } from "@/features/auth/hooks/use-current";
 import { TopicsList } from "@/features/topics/components/topics-list";
+import { HomeContentSelector } from "@/components/selectors/home-content-selector";
+import { useState } from "react";
 
 export function HomeContent() {
+  const [selectedContent, setSelectedContent] = useState("latestTopics");
   const { data: loggedInUser, isLoading } = useCurrent();
 
   if (isLoading) {
@@ -15,7 +18,11 @@ export function HomeContent() {
       {loggedInUser ? (
         <div className="flex w-full flex-1 flex-col items-center gap-y-10">
           <h1 className="text-3xl font-semibold">Explore topics</h1>
-          <TopicsList />
+          <HomeContentSelector
+            value={selectedContent}
+            onValueChange={setSelectedContent}
+          />
+          <TopicsList sortBy={selectedContent} />
         </div>
       ) : (
         <div className="flex w-full flex-1 flex-col items-center justify-center gap-y-4">

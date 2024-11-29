@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { ActiveButton } from "@/components/active-button";
+import { ActiveButton } from "@/components/buttons/active-button";
 import { UserButton } from "@/features/auth/components/user-button";
 import { useCurrent } from "@/features/auth/hooks/use-current";
 import { CreateTopicDialog } from "@/features/topics/components/create-topic-dialog";

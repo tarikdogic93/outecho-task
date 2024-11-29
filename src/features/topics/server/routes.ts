@@ -16,12 +16,14 @@ const app = new Hono()
       z.object({
         page: z.string(),
         limit: z.string(),
+        sortBy: z.string(),
       }),
     ),
     async (c) => {
       const page = Number(c.req.query("page") || 1);
       const limit = Number(c.req.query("limit") || 5);
       const offset = (page - 1) * limit;
+      const sortBy = c.req.query("sortBy") || "latest";
 
       const totalCountResult = await db
         .select({
@@ -31,6 +33,19 @@ const app = new Hono()
         .limit(1);
 
       const totalCount = totalCountResult[0].totalCount;
+
+      let orderByClause;
+
+      if (sortBy === "latest") {
+        orderByClause = desc(topics.createdAt);
+      } else if (sortBy === "hot") {
+        orderByClause = desc(sql`COUNT(DISTINCT CASE 
+          WHEN ${likes.commentId} IS NULL AND ${likes.topicId} = ${topics.id} THEN ${likes.userId} 
+          ELSE NULL 
+        END)`);
+      } else {
+        orderByClause = desc(topics.createdAt);
+      }
 
       const allTopics = await db
         .select({
@@ -60,7 +75,7 @@ const app = new Hono()
         .groupBy(topics.id, users.id)
         .limit(limit)
         .offset(offset)
-        .orderBy(desc(topics.createdAt));
+        .orderBy(orderByClause);
 
       return c.json({
         message: "",

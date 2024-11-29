@@ -6,9 +6,20 @@ import { useTopics } from "@/features/topics/hooks/use-topics";
 import { TopicCard } from "@/features/topics/components/topic-card";
 import { Button } from "@/components/ui/button";
 
-export function TopicsList() {
+interface TopicsListProps {
+  sortBy: string;
+}
+
+export function TopicsList({ sortBy }: TopicsListProps) {
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isLoading } =
-    useTopics(20);
+    useTopics(
+      20,
+      sortBy === "latestTopics"
+        ? "latest"
+        : sortBy === "hotTopics"
+          ? "hot"
+          : "",
+    );
 
   if (isLoading) {
     return (
