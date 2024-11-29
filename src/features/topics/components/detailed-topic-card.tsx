@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDistanceToNowStrict } from "date-fns";
-import { Dot, Heart, Loader2 } from "lucide-react";
+import { Dot, Eye, EyeOff, Heart, Loader2, Trash2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useCurrent } from "@/features/auth/hooks/use-current";
@@ -30,7 +30,7 @@ export function DetailedTopicCard({
   const { mutate: likeTopic } = useLikeTopic(topicId);
 
   if (isLoggedInUserLoading || isTopicLoading) {
-    return <Loader2 className="size-10 animate-spin text-primary" />;
+    return <Loader2 className="size-10 shrink-0 animate-spin text-primary" />;
   }
 
   if (!topic) {
@@ -59,25 +59,27 @@ export function DetailedTopicCard({
   return (
     <Card className="h-full w-full max-w-3xl self-start">
       <CardContent className="p-6">
-        <div className="flex flex-col gap-y-2">
-          <h3 className="truncate text-xl font-semibold">{title}</h3>
-          <p className="break-words text-sm text-muted-foreground">
-            {description ? description : `No description available`}
-          </p>
-          <div className="flex items-center">
-            <p className="text-glow text-sm font-bold tracking-wide">
+        <div className="flex flex-col gap-y-4">
+          <div className="flex flex-col gap-y-2">
+            <h3 className="truncate text-xl font-semibold">{title}</h3>
+            <p className="break-words text-sm text-muted-foreground">
+              {description ? description : `No description available`}
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-center">
+            <p className="text-glow truncate text-sm font-bold tracking-wide">
               {firstName && lastName ? `${firstName} ${lastName}` : email}
             </p>
-            <Dot />
-            <p className="text-sm">
+            <Dot className="hidden shrink-0 sm:block" />
+            <p className="whitespace-nowrap text-sm">
               {timeLabel} {formatDistanceToNowStrict(dateToUse)} ago
             </p>
-            <Dot />
-            <p className="text-sm">
+            <Dot className="hidden shrink-0 sm:block" />
+            <p className="whitespace-nowrap text-sm">
               {commentsCount} {commentsCount === 1 ? "comment" : "comments"}
             </p>
-            <Dot />
-            <p className="text-sm">
+            <Dot className="hidden shrink-0 sm:block" />
+            <p className="whitespace-nowrap text-sm">
               {likesCount} {likesCount === 1 ? "like" : "likes"}
             </p>
           </div>
@@ -89,7 +91,17 @@ export function DetailedTopicCard({
                 disabled={isPending}
                 onClick={onShowComments}
               >
-                {showComments ? "Hide comments" : "Show comments"}
+                {showComments ? (
+                  <>
+                    <EyeOff className="size-4 shrink-0" />
+                    <span className="hidden sm:block">Hide comments</span>
+                  </>
+                ) : (
+                  <>
+                    <Eye className="size-4 shrink-0" />
+                    <span className="hidden sm:block">Show comments</span>
+                  </>
+                )}
               </Button>
               <AddCommentDialog
                 topicId={topicId}
@@ -108,13 +120,16 @@ export function DetailedTopicCard({
                     disabled={isPending}
                     onClick={() => deleteTopic()}
                   >
-                    {isPending ? "Deleting..." : "Delete"}
+                    <Trash2 className="size-4 shrink-0" />
+                    <span className="hidden sm:block">
+                      {isPending ? "Deleting..." : "Delete"}
+                    </span>
                   </Button>
                 </>
               )}
             </div>
             <Heart
-              className={cn("cursor-pointer text-primary", {
+              className={cn("shrink-0 cursor-pointer text-primary", {
                 "fill-primary": like,
               })}
               onClick={() => likeTopic()}

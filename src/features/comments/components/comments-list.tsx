@@ -17,7 +17,7 @@ export function CommentsList({ topicId }: CommentsListProps) {
     useComments(topicId, 20);
 
   if (isLoading) {
-    return <Loader2 className="size-8 animate-spin text-primary" />;
+    return <Loader2 className="size-8 shrink-0 animate-spin text-primary" />;
   }
 
   if (!data || !data.pages[0]) {

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { ListPlus } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { topicSchema } from "@/features/topics/schemas";
@@ -59,7 +60,8 @@ export function CreateTopicDialog() {
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
-          Create topic
+          <ListPlus className="size-4 shrink-0" />
+          <span className="hidden md:block">Create topic</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="md:w-[500px]">

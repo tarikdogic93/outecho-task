@@ -30,22 +30,22 @@ export function UserCard({ user }: UserCardProps) {
   return (
     <Card className="h-full w-full max-w-3xl">
       <CardContent className="p-6">
-        <div className="flex gap-x-4">
-          <Avatar className="size-10 border-2 border-primary">
+        <div className="flex flex-col items-center gap-y-4 sm:flex-row sm:items-start sm:gap-x-4">
+          <Avatar className="size-16 border-2 border-primary sm:size-12">
             <AvatarImage src={image ? image : undefined} />
             <AvatarFallback className="flex items-center justify-center bg-primary/20 font-medium">
               {avatarFallback}
             </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col">
-            <h3 className="truncate text-xl font-semibold">
+          <div className="flex w-full flex-col items-center sm:items-start">
+            <h3 className="max-w-[90%] truncate text-center text-xl font-semibold">
               {firstName && lastName ? `${firstName} ${lastName}` : email}
             </h3>
-            <div className="flex items-center">
+            <div className="flex flex-col items-center sm:flex-row">
               <p className="text-sm">
                 Joined {formatDistanceToNowStrict(createdAtDate)} ago
               </p>
-              <Dot />
+              <Dot className="hidden shrink-0 sm:block" />
               <p className="text-sm">
                 {commentsCount} {commentsCount === 1 ? "comment" : "comments"}
               </p>

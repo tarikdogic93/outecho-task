@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Pencil } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { commentSchema } from "@/features/comments/schemas";
@@ -80,7 +81,8 @@ export function UpdateCommentDialog({
           disabled={disabled}
           onClick={() => setIsDialogOpen(true)}
         >
-          Update
+          <Pencil className="size-4 shrink-0" />
+          <span className="hidden sm:block">Update</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="md:w-[500px]">

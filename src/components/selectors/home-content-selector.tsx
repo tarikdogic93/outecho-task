@@ -22,7 +22,7 @@ export function HomeContentSelector({
       value={value}
       onValueChange={(selectedValue) => onValueChange(selectedValue)}
     >
-      <SelectTrigger className="w-1/3">
+      <SelectTrigger className="w-full sm:w-3/4 md:w-1/3">
         <SelectValue placeholder="Select content" />
       </SelectTrigger>
       <SelectContent>

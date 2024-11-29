@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { House, List } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { UserButton } from "@/features/auth/components/user-button";
@@ -24,13 +25,19 @@ export function Navigation() {
   const buttons = loggedInUser ? (
     <>
       <Button variant="outline" asChild>
-        <Link href="/">Home</Link>
+        <Link href="/">
+          <House className="size-4 shrink-0" />
+          <span className="hidden md:block">Home</span>
+        </Link>
       </Button>
       {isTopicsPage ? (
         <CreateTopicDialog />
       ) : (
         <Button variant="outline" asChild>
-          <Link href="/topics">My topics</Link>
+          <Link href="/topics">
+            <List className="size-4 shrink-0" />
+            <span className="hidden md:block">My topics</span>
+          </Link>
         </Button>
       )}
       <NotificationButton />

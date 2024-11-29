@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDistanceToNowStrict } from "date-fns";
-import { Dot, Heart } from "lucide-react";
+import { Dot, Heart, Trash2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useDeleteComment } from "@/features/comments/hooks/use-delete-comment";
@@ -65,25 +65,25 @@ export function CommentCard({
   return (
     <Card className="h-full w-full max-w-3xl border-none outline-dashed outline-2 outline-input">
       <CardContent className="p-6">
-        <div className="flex flex-col gap-y-2">
+        <div className="flex flex-col gap-y-4">
           <p className="break-words text-sm text-muted-foreground">{content}</p>
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <p className="text-glow text-sm font-bold tracking-wide">
+            <div className="flex w-full flex-col sm:flex-row sm:items-center">
+              <p className="text-glow truncate text-sm font-bold tracking-wide">
                 {firstName && lastName ? `${firstName} ${lastName}` : email}
               </p>
-              <Dot />
-              <p className="text-sm">
+              <Dot className="hidden shrink-0 sm:block" />
+              <p className="whitespace-nowrap text-sm">
                 {timeLabel} {formatDistanceToNowStrict(dateToUse)} ago
               </p>
-              <Dot />
-              <p className="text-sm">
+              <Dot className="hidden shrink-0 sm:block" />
+              <p className="whitespace-nowrap text-sm">
                 {likesCount} {likesCount === 1 ? "like" : "likes"}
               </p>
             </div>
             {!isLoggedInUserOwner && (
               <Heart
-                className={cn("cursor-pointer text-primary", {
+                className={cn("shrink-0 cursor-pointer text-primary", {
                   "fill-primary": like,
                 })}
                 onClick={() => likeComment()}
@@ -107,11 +107,14 @@ export function CommentCard({
                   disabled={isPending}
                   onClick={() => deleteComment({ param: { commentId } })}
                 >
-                  {isPending ? "Deleting..." : "Delete"}
+                  <Trash2 className="size-4 shrink-0" />
+                  <span className="hidden sm:block">
+                    {isPending ? "Deleting..." : "Delete"}
+                  </span>
                 </Button>
               </div>
               <Heart
-                className={cn("cursor-pointer text-primary", {
+                className={cn("shrink-0 cursor-pointer text-primary", {
                   "fill-primary": like,
                 })}
                 onClick={() => likeComment()}

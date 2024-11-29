@@ -25,6 +25,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Pencil } from "lucide-react";
 
 type defaultValuesType = z.infer<typeof topicSchema>;
 
@@ -79,7 +80,8 @@ export function UpdateTopicDialog({ topic, disabled }: UpdateTopicDialogProps) {
           disabled={disabled}
           onClick={() => setIsDialogOpen(true)}
         >
-          Update
+          <Pencil className="size-4 shrink-0" />
+          <span className="hidden sm:block">Update</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="md:w-[500px]">

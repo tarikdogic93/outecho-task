@@ -7,7 +7,7 @@ export function Header() {
   return (
     <header className="fixed top-0 z-50 w-full bg-primary-foreground p-4 shadow-md">
       <div className="mx-auto flex h-10 max-w-screen-2xl items-center justify-between">
-        <Link className="flex items-center gap-x-2" href="/">
+        <Link className="flex shrink-0 items-center gap-x-2" href="/">
           <Image src="/logo.svg" alt="Logo" width={28} height={28} priority />
           <p className="hidden text-sm font-semibold md:block">TopicHub</p>
         </Link>

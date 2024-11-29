@@ -44,22 +44,22 @@ export function TopicCard({ topic }: TopicCardProps) {
       onClick={() => router.push(`/topics/${id}`)}
     >
       <CardContent className="p-6">
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-y-4">
           <h3 className="truncate text-xl font-semibold">{title}</h3>
-          <div className="flex items-center">
-            <p className="text-glow text-sm font-bold tracking-wide">
+          <div className="flex flex-col sm:flex-row sm:items-center">
+            <p className="text-glow truncate text-sm font-bold tracking-wide">
               {firstName && lastName ? `${firstName} ${lastName}` : email}
             </p>
-            <Dot />
-            <p className="text-sm">
+            <Dot className="hidden shrink-0 sm:block" />
+            <p className="whitespace-nowrap text-sm">
               {timeLabel} {formatDistanceToNowStrict(dateToUse)} ago
             </p>
-            <Dot />
-            <p className="text-sm">
+            <Dot className="hidden shrink-0 sm:block" />
+            <p className="whitespace-nowrap text-sm">
               {commentsCount} {commentsCount === 1 ? "comment" : "comments"}
             </p>
-            <Dot />
-            <p className="text-sm">
+            <Dot className="hidden shrink-0 sm:block" />
+            <p className="whitespace-nowrap text-sm">
               {likesCount} {likesCount === 1 ? "like" : "likes"}
             </p>
           </div>

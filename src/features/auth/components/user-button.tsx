@@ -73,7 +73,7 @@ export function UserButton({ user }: UserButtonProps) {
           className="flex h-10 cursor-pointer items-center justify-center font-medium"
           onClick={() => router.push("/profile")}
         >
-          <UserPen className="mr-2 size-4" />
+          <UserPen className="mr-2 size-4 shrink-0" />
           Profile settings
         </DropdownMenuItem>
         <Separator className="mb-1" />
@@ -81,7 +81,7 @@ export function UserButton({ user }: UserButtonProps) {
           className="flex h-10 cursor-pointer items-center justify-center font-medium"
           onClick={() => signOut()}
         >
-          <LogOut className="mr-2 size-4" />
+          <LogOut className="mr-2 size-4 shrink-0" />
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>

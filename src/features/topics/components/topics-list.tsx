@@ -24,7 +24,7 @@ export function TopicsList({ sortBy }: TopicsListProps) {
   if (isLoading) {
     return (
       <div className="flex w-full flex-1 items-center justify-center">
-        <Loader2 className="size-10 animate-spin text-primary" />
+        <Loader2 className="size-10 shrink-0 animate-spin text-primary" />
       </div>
     );
   }
