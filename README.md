@@ -1,6 +1,6 @@
 # TopicHub
 
-**TopicHub** is a full-stack web application built using [_Next.js_](https://nextjs.org/), [_Hono.js_](https://hono.dev/), [_TypeScript_](https://www.typescriptlang.org/), [_Tailwind CSS_](https://tailwindcss.com/), [_Shadcn UI_](https://ui.shadcn.com/), [_Drizzle ORM_](https://orm.drizzle.team/), [_Neon PostgreSQL_](https://neon.tech/), [_Zod_](https://zod.dev/), and [_Knock_](https://knock.app/) for notifications. The app allows users to interact with topics and comments, with features like user authentication, topic creation, comment submission, and notifications. The project is deployed to [_Vercel_](https://vercel.com/).
+**TopicHub** is a full-stack web application built using [_Next.js_](https://nextjs.org/), [_Hono.js_](https://hono.dev/), [_TypeScript_](https://www.typescriptlang.org/), [_Tailwind CSS_](https://tailwindcss.com/), [_Shadcn UI_](https://ui.shadcn.com/), [_Drizzle ORM_](https://orm.drizzle.team/), [_Neon PostgreSQL_](https://neon.tech/), [_TanStack Query_](https://tanstack.com/query/latest), [_Zod_](https://zod.dev/), and [_Knock_](https://knock.app/) for notifications. The app allows users to interact with topics and comments, with features like user authentication, topic creation, comment submission, and notifications. The project is deployed to [_Vercel_](https://vercel.com/).
 
 ---
 
