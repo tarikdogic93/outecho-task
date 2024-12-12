@@ -82,19 +82,3 @@ Before running the project, make sure to set up the following environment variab
    `bun run dev`
 
 This should start the app on `http://localhost:3000`.
-
----
-
-## **Future Enhancements**
-
-1. **Search and Filtering Features**
-
-- Implementing a powerful search functionality with filters would help users quickly find topics of interest. This would improve usability, especially as the number of topics and comments grows.
-
-2. **Comment Replies**
-
-- Allowing users to reply directly to comments would create threaded discussions, making it easier to follow conversations. This would improve engagement and provide a more organized way for users to interact with specific comments.
-
-3. **Sophisticated Authentication with Auth.js**
-
-- Implementing a more advanced authentication solution using [_Auth.js_](https://authjs.dev/) would allow for easy integration of multiple sign-in options, such as **Google Sign-In** and other **OAuth** providers. This would streamline the user registration and login process, offering a smoother and more secure experience for users.
